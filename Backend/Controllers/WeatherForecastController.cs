@@ -1,4 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
+using LangChain.Chains.LLM;
+using Pgvector;
+using Pgvector.EntityFrameworkCore;
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
+using LangChain.TextSplitters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LangChain.Prompts;
+using Shared;
 
 namespace Backend.Controllers;
 
@@ -21,6 +31,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+       
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
