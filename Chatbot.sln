@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{26F06DB6-F64A-4A43-835A-2165796AD36C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{DDDFC75C-D8E4-43C8-9B01-6824C8049240}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{6254C3D7-B488-492B-B8B8-BEA80CD2B997}"
 EndProject
 Global
@@ -16,10 +14,6 @@ Global
 		{26F06DB6-F64A-4A43-835A-2165796AD36C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26F06DB6-F64A-4A43-835A-2165796AD36C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26F06DB6-F64A-4A43-835A-2165796AD36C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DDDFC75C-D8E4-43C8-9B01-6824C8049240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDDFC75C-D8E4-43C8-9B01-6824C8049240}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DDDFC75C-D8E4-43C8-9B01-6824C8049240}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DDDFC75C-D8E4-43C8-9B01-6824C8049240}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6254C3D7-B488-492B-B8B8-BEA80CD2B997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6254C3D7-B488-492B-B8B8-BEA80CD2B997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6254C3D7-B488-492B-B8B8-BEA80CD2B997}.Release|Any CPU.ActiveCfg = Release|Any CPU
