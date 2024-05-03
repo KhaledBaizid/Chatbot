@@ -32,38 +32,51 @@ public class PDFImplementation : IPDFInterface
         {
             if (!UrlHasPdfExtension(url))
                 return "The url does not have a pdf extension, please provide a valid pdf url with valid extension";
-
-            using PdfDocument document = PdfDocument.Open(url);
-            await _systemContext.PDFs.AddAsync(new PDF {AdminId = 1,Url=url});
-            await _systemContext.SaveChangesAsync();
-            var pdfFound =  await _systemContext.PDFs.FirstAsync(p=>p.Url==url);
-            var pdfId = pdfFound.Id;
-            int pageCount = document.NumberOfPages;
-
-            for (int i = 1; i <= pageCount; i++)
+            //////////////////////
+            using (var client = new HttpClient())
             {
-                Page page = document.GetPage(i);
-                string text="";
-                text = page.Text;
-                Console.WriteLine(text);
-                Console.WriteLine("******************************************");
-                var r_splitter = new RecursiveCharacterTextSplitter(["\n\n", "\n", " ", ""], 1000, 80);
-                var spl= r_splitter.SplitText(text);
-      
-                foreach (var splitText in spl)
+                var response = await client.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(splitText);
-                    var v = await _embeddingProvider.GetModel().EmbedQueryAsync(splitText);
-                    var chunk = new Chunks
-                    {   PDFId = pdfId,
-                        Embedding = new Vector(v),
-                        Text = splitText
-                    };
-                    await _systemContext.Chunks.AddAsync(chunk);
-                    await _systemContext.SaveChangesAsync(); 
+                    /* handle the error */
                 }
+
+                var bytes = await response.Content.ReadAsStreamAsync();
+                //////////////  
+                using PdfDocument document = PdfDocument.Open(bytes);
+                await _systemContext.PDFs.AddAsync(new PDF { AdminId = 1, Url = url });
+                await _systemContext.SaveChangesAsync();
+                var pdfFound = await _systemContext.PDFs.FirstAsync(p => p.Url == url);
+                var pdfId = pdfFound.Id;
+                int pageCount = document.NumberOfPages;
+
+                for (int i = 1; i <= pageCount; i++)
+                {
+                    Page page = document.GetPage(i);
+                    string text = "";
+                    text = page.Text;
+                    Console.WriteLine(text);
+                    Console.WriteLine("******************************************");
+                    var r_splitter = new RecursiveCharacterTextSplitter(["\n\n", "\n", " ", ""], 1000, 80);
+                    var spl = r_splitter.SplitText(text);
+
+                    foreach (var splitText in spl)
+                    {
+                        Console.WriteLine(splitText);
+                        var v = await _embeddingProvider.GetModel().EmbedQueryAsync(splitText);
+                        var chunk = new Chunks
+                        {
+                            PDFId = pdfId,
+                            Embedding = new Vector(v),
+                            Text = splitText
+                        };
+                        await _systemContext.Chunks.AddAsync(chunk);
+                        await _systemContext.SaveChangesAsync();
+                    }
+                }
+
+                return "pdf is added successfully";
             }
-            return "pdf is added successfully";
         }
         catch (Exception e)
         {
