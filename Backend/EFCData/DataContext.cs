@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pgvector;
 using Shared;
 
 namespace Backend.EFCData;
@@ -12,16 +13,38 @@ public class DataContext : DbContext
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<Conversation_PDF_Chunks> ConversationPdfChunks{ get; set; }
     
-    protected readonly IConfiguration Configuration;
-    public DataContext(IConfiguration configuration)
+    // protected readonly IConfiguration Configuration;
+    // public DataContext(IConfiguration configuration,DbContextOptions<DataContext> options)
+    // {
+    //     Configuration = configuration;
+    //     
+    // }
+    // protected override void OnConfiguring(DbContextOptionsBuilder options)
+    // {
+    //     options.UseNpgsql(Configuration.GetConnectionString("ChatBotDBCloud"), o => o.UseVector());
+    // }
+    
+    private readonly IConfiguration _configuration;
+    private readonly bool _useInMemoryDatabase;
+    private readonly DbContextOptions<DataContext> _options;
+    public DataContext(IConfiguration configuration, bool useInMemoryDatabase = false)
     {
-        Configuration = configuration;
+        _configuration = configuration;
+        _useInMemoryDatabase = useInMemoryDatabase;
+        
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        options.UseNpgsql(Configuration.GetConnectionString("ChatBotDBCloud"), o => o.UseVector());
+        if (_useInMemoryDatabase)
+        {
+            optionsBuilder.UseInMemoryDatabase("Test_Database");
+        }
+        else
+        {
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("ChatBotDBCloud"), o => o.UseVector());
+        }
     }
-   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Admin>()
@@ -66,7 +89,26 @@ public class DataContext : DbContext
             .HasOne(cp => cp.PDF_Chuncks)
             .WithMany(pc => pc.PDFChunks)
             .HasForeignKey(cp => cp.PDFChuncksId);
+        
+        //////////////////////////////////////////////////////
+        
+        modelBuilder.Entity<Chunks>()
+            .Property(c => c.Embedding)
+            .HasConversion(
+                v => ConvertEmbeddingToString(v)
+                , v => ConvertStringToEmbedding(v)
+            );
+        ////////////////////////////////////////////////////////
             
     }
-       
+
+    private Vector? ConvertStringToEmbedding(object o)
+    {
+        throw new NotImplementedException();
+    }
+
+    private string ConvertEmbeddingToString(Vector vector)
+    {
+        return vector.ToString();
+    }
 }
