@@ -15,7 +15,7 @@ namespace TestProject;
 public class CredentialsServiceTests
 {
     [Test]
-    public async Task ShouldGetErrorMessage_WithEditPassword_WhenCurrentPasswordIsWrong()
+    public async Task ShouldGetErrorMessage_WhenEditPassword_WithCurrentPasswordIsWrong()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -32,7 +32,7 @@ public class CredentialsServiceTests
         await context.Database.EnsureDeletedAsync();
     }
     [Test]
-    public async Task ShouldGetErrorMessage_WithEditPassword_WhenNewPasswordAndReEnterPasswordDoNotMatch()
+    public async Task ShouldGetErrorMessage_WhenEditPassword_WithNewPasswordAndReEnterPasswordDoNotMatch()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -50,7 +50,7 @@ public class CredentialsServiceTests
     }
     
     [Test]
-    public async Task ShouldGetConfirmationMessage_WithEditPassword_WhenNewPasswordAndReEnterPasswordDoMatchAndCurrentPasswordIsValid()
+    public async Task ShouldGetConfirmationMessage_WhenEditPassword_WithNewPasswordAndReEnterPasswordDoMatchAndCurrentPasswordIsValid()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -70,7 +70,7 @@ public class CredentialsServiceTests
  
     
      [Test]
-    public async Task ShouldGetErrorMessage_WithEditEmail_WhenCurrentPasswordIsWrong()
+    public async Task ShouldGetErrorMessage_WhenEditEmail_WhitCurrentPasswordIsWrong()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -87,7 +87,7 @@ public class CredentialsServiceTests
         await context.Database.EnsureDeletedAsync();
     }
     [Test]
-    public async Task ShouldGetErrorMessage_WithEditEmail_WihenNewEmailAndReEnterEmailDoNotMatch()
+    public async Task ShouldGetErrorMessage_WithEditEmail_WithNewEmailAndReEnterEmailDoNotMatch()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -105,7 +105,7 @@ public class CredentialsServiceTests
     }
     
     [Test]
-    public async Task ShouldGetConfirmationMessage_WithEditEmail_WhenNewEmailAndReEnterEmailDoMatchAndCurrentPasswordIsValid()
+    public async Task ShouldGetConfirmationMessage_WhenEditEmail_WithNewEmailAndReEnterEmailDoMatchAndCurrentPasswordIsValid()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);

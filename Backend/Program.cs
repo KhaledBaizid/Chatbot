@@ -1,6 +1,8 @@
 using Backend.DataAccessObjects.Admin;
 using Backend.DataAccessObjects.LoginDAO;
+using Backend.DataAccessObjects.PdfDAO;
 using Backend.EFCData;
+using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<ICredentialsInterface, CredentialsImplementation>();
 builder.Services.AddScoped<ILoginInterface, LoginImplementation>();
+builder.Services.AddScoped<IPDFInterface, PDFImplementation>();
+
+builder.Services.AddSingleton<IPromptProvider,PromptProvider>();
+builder.Services.AddSingleton<IEmbeddingProvider,EmbeddingProvide>(provider =>
+{
+    // Retrieve API_KEY from configuration or wherever it's stored
+    var apiKey = "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";
+    return new EmbeddingProvide(apiKey);
+
+});
 
 builder.Services.AddCors(options =>
 {

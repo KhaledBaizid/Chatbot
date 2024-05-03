@@ -39,6 +39,7 @@ public class DataContext : DbContext
         if (_useInMemoryDatabase)
         {
             optionsBuilder.UseInMemoryDatabase("Test_Database");
+           
         }
         else
         {
@@ -90,16 +91,15 @@ public class DataContext : DbContext
             .WithMany(pc => pc.PDFChunks)
             .HasForeignKey(cp => cp.PDFChuncksId);
         
-        //////////////////////////////////////////////////////
-        
-        modelBuilder.Entity<Chunks>()
-            .Property(c => c.Embedding)
-            .HasConversion(
-                v => ConvertEmbeddingToString(v)
-                , v => ConvertStringToEmbedding(v)
-            );
-        ////////////////////////////////////////////////////////
-            
+            if (_useInMemoryDatabase )
+            {
+                modelBuilder.Entity<Chunks>()
+                    .Property(c => c.Embedding)
+                    .HasConversion(
+                        v => ConvertEmbeddingToString(v)
+                        , v => ConvertStringToEmbedding(v)
+                    );
+            }
     }
 
     private Vector? ConvertStringToEmbedding(object o)
