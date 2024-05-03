@@ -9,7 +9,7 @@ namespace TestProject;
 public class LoginServiceTests
 {
      [Test]
-    public async Task GetLoginAdminIdAsync_ValidCredentials_ReturnsAdmin()
+    public async Task ReturnAdmin_WhenLogin_WithValidCredentials()
     {
     
         // Arrange
@@ -29,7 +29,7 @@ public class LoginServiceTests
     
     
     [Test]
-    public async Task GetLoginAdminIdAsync_NotValidPassword_ReturnsNoValidAdmin()
+    public async Task ReturnNotValidAdmin_WhenLogin_WithWrongPassword()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -47,7 +47,7 @@ public class LoginServiceTests
         }
     
     [Test]
-    public async Task GetLoginAdminIdAsync_NotValidEMail_ReturnsNoValidAdmin()
+    public async Task ReturnNotValidAdmin_WhenLogin_WithWrongEmail()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -65,7 +65,7 @@ public class LoginServiceTests
     }
     
     [Test]
-    public async Task GetLoginAdminIdAsync_NotValidEMailAndPassword_ReturnsNoValidAdmin()
+    public async Task ReturnNotValidAdmin_WhenLogin_WithWrongPasswordAndWrongEmail()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -82,7 +82,7 @@ public class LoginServiceTests
         await context.Database.EnsureDeletedAsync();
     }
     [Test]
-    public async Task GetLoginAdminIdAsync_EmptyFields_ReturnsNoValidAdmin()
+    public async Task ReturnNotValidAdmin_WhenLogin_WithEmptyFields()
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
@@ -91,11 +91,16 @@ public class LoginServiceTests
         var service = new LoginImplementation(context);
     
         // Act
-        var result = await service.GetLoginAdminIdAsync("", "");
+        var result = await service.GetLoginAdminIdAsync("0", "0");
     
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Id, Is.EqualTo(-1));
         await context.Database.EnsureDeletedAsync();
     }
+    
+    
+    
+    /////////////////////////////////////////
+   
 }
