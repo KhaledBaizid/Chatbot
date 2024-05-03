@@ -98,4 +98,26 @@ public class LoginServiceTests
         Assert.That(result.Id, Is.EqualTo(-1));
         await context.Database.EnsureDeletedAsync();
     }
+    
+    
+    
+    /////////////////////////////////////////
+    [Test]
+    public async Task GetLoginAdminIdAsync_ValidCredentials_ReturnsAdmin123()
+    {
+    
+        // Arrange
+        var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
+        await context.SaveChangesAsync();
+        var service = new LoginImplementation(context);
+    
+        // Act
+        var result = await service.GetLoginAdminIdAsync("test@test.com", "password");
+    
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Id, Is.EqualTo(1));
+        await context.Database.EnsureDeletedAsync();
+    }
 }
