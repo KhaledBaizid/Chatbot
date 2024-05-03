@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LangChain.Prompts;
 using Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
