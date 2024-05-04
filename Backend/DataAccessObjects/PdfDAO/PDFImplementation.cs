@@ -55,14 +55,12 @@ public class PDFImplementation : IPDFInterface
                     Page page = document.GetPage(i);
                     string text = "";
                     text = page.Text;
-                    Console.WriteLine(text);
-                    Console.WriteLine("******************************************");
+                  
                     var r_splitter = new RecursiveCharacterTextSplitter(["\n\n", "\n", " ", ""], 1000, 80);
                     var spl = r_splitter.SplitText(text);
 
                     foreach (var splitText in spl)
                     {
-                        Console.WriteLine(splitText);
                         var v = await _embeddingProvider.GetModel().EmbedQueryAsync(splitText);
                         var chunk = new Chunks
                         {
