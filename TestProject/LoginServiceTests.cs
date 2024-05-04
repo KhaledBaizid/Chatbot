@@ -14,8 +14,9 @@ public class LoginServiceTests
     
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
-            await context.SaveChangesAsync();
+        await context.SaveChangesAsync();
         var service = new LoginImplementation(context);
     
             // Act
@@ -33,6 +34,7 @@ public class LoginServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new LoginImplementation(context);
@@ -51,6 +53,7 @@ public class LoginServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new LoginImplementation(context);
@@ -86,6 +89,7 @@ public class LoginServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new LoginImplementation(context);

@@ -85,6 +85,40 @@ public class PDFImplementation : IPDFInterface
         }
         throw new NotImplementedException();
     }
+
+    public async  Task<bool> IsPDFExistAsync(string url)
+    {
+        var isExisting = await _systemContext.PDFs.FirstOrDefaultAsync(p => p.Url == url);
+        if(isExisting != null)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public async Task<string> DeletePDFAsync(string url)
+    {
+        try
+        {
+            var pdf = await _systemContext.PDFs.FirstOrDefaultAsync(p => p.Url == url);
+            if (pdf != null)
+            {
+                _systemContext.PDFs.Remove(pdf);
+                await _systemContext.SaveChangesAsync();
+                return "pdf is deleted successfully";
+            }
+            return "pdf is not found";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+    }
+
     public bool UrlHasPdfExtension(string url)
     {
         if (url.Length >= 4)

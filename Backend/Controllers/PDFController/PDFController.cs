@@ -30,4 +30,19 @@ public class PDFController : ControllerBase
       
       
     }
+    
+    [EnableCors]
+    [HttpDelete]
+    public async Task<ActionResult<string>> DeletePDFAsync(string url)
+    {
+        try
+        {
+            return StatusCode(200,await _pdfInterface.DeletePDFAsync(url)); 
+        }
+        catch (Exception e)
+        {
+            return   StatusCode(500, e.Message);
+        }
+    }
+    
 }

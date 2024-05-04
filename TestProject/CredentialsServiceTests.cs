@@ -19,6 +19,7 @@ public class CredentialsServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new CredentialsImplementation(context);
@@ -36,6 +37,7 @@ public class CredentialsServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new CredentialsImplementation(context);
@@ -54,6 +56,7 @@ public class CredentialsServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new CredentialsImplementation(context);
@@ -74,6 +77,7 @@ public class CredentialsServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new CredentialsImplementation(context);
@@ -91,6 +95,7 @@ public class CredentialsServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new CredentialsImplementation(context);
@@ -109,6 +114,7 @@ public class CredentialsServiceTests
     {
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
         var service = new CredentialsImplementation(context);
