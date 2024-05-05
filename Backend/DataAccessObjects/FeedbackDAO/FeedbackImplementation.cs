@@ -29,4 +29,25 @@ public class FeedbackImplementation: IFeedBackInterface
         return "";
             
     }
+
+    public Task<List<Conversation>> GetConversationsByFeedbackAndByDate(DateTime startDate, DateTime endDate, string feedback)
+    {
+        try
+        {
+            var startDateToUniversalTime = startDate.ToUniversalTime();
+            var endDateToUniversalTime = endDate.ToUniversalTime();
+            if (startDateToUniversalTime > endDateToUniversalTime)
+            {
+                throw new Exception("Start date cannot be greater than end date");
+            }
+            var conversations = _systemContext.Conversations.Where(c => c.Feedback == feedback && c.ConversationTime >= startDateToUniversalTime && c.ConversationTime <= endDateToUniversalTime).ToList();
+            return Task.FromResult(conversations);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        throw new NotImplementedException();
+    }
 }
