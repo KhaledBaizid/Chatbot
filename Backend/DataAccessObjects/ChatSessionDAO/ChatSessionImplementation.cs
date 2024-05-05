@@ -1,5 +1,6 @@
 ﻿using Backend.EFCData;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 
 namespace Backend.DataAccessObjects.ChatSessionDAO;
 
@@ -30,5 +31,21 @@ public class ChatSessionImplementation : IChatSessionInterface
             throw;
         }
         throw new NotImplementedException();
+    }
+
+    public async Task<Chat_session> getChatSessionById(int chatSessionId)
+    {
+        try
+        {
+            var chatSession =  await _systemContext.Chat_sessions.Include(c => c.Conversations).OrderByDescending(c=>c.Id).FirstAsync(c => c.Id == chatSessionId);
+            return chatSession;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+        
     }
 }

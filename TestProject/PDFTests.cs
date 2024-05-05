@@ -7,9 +7,9 @@ using Shared;
 
 namespace TestProject;
 
-public class PDFServiceTests
+public class PDFTests
 {
- string apiKey = "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";
+  const string apiKey = "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";
     
     [Test]
     public async Task ShouldGetConfirmationMessage_WithAddingPDF_WhenTheUrlHasValidPDFExtension()

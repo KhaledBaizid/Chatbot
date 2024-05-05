@@ -12,7 +12,7 @@ using Shared;
 
 namespace TestProject;
 
-public class CredentialsServiceTests
+public class CredentialsTests
 {
     [Test]
     public async Task ShouldGetErrorMessage_WhenEditPassword_WithCurrentPasswordIsWrong()

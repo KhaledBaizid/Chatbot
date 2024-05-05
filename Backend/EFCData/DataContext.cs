@@ -66,6 +66,7 @@ public class DataContext : DbContext
             .HasIndex(i => i.Embedding)
             .HasMethod("ivfflat")
             .HasOperators("vector_l2_ops");
+        
       
  ////////////////////////////////       
         modelBuilder.Entity<Chat_session>()
@@ -93,18 +94,21 @@ public class DataContext : DbContext
         
             if (_useInMemoryDatabase )
             {
-                modelBuilder.Entity<Chunks>()
-                    .Property(c => c.Embedding)
-                    .HasConversion(
-                        v => ConvertEmbeddingToString(v)
-                        , v => ConvertStringToEmbedding(v)
-                    );
+                modelBuilder.Entity<Chunks>().Ignore(c=>c.Embedding);
+                
+                // modelBuilder.Entity<Chunks>()
+                //     .Property(c => c.Embedding)
+                //     .HasConversion(
+                //         v => ConvertEmbeddingToString(v)
+                //         , v => ConvertStringToEmbedding(v)
+                //     );
             }
     }
 
     private Vector? ConvertStringToEmbedding(object o)
     {
-        throw new NotImplementedException();
+        return o as Vector;
+       
     }
 
     private string ConvertEmbeddingToString(Vector vector)
