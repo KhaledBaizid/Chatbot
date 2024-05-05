@@ -16,7 +16,7 @@ public class Conversation
     [ForeignKey("Chat_session")]
     [JsonIgnore]
     public int ChatSessionId { get; set; } // Foreign key
-    
+    [JsonIgnore]
     public Chat_session? ChatSession { get; set; } // Navigation property
     [JsonIgnore]
     public List<Conversation_PDF_Chunks> ConversationPDFChunks { get; set; }

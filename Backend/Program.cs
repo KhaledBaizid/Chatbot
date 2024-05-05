@@ -1,5 +1,6 @@
 using Backend.DataAccessObjects.Admin;
 using Backend.DataAccessObjects.ChatSessionDAO;
+using Backend.DataAccessObjects.ConversationDAO;
 using Backend.DataAccessObjects.LoginDAO;
 using Backend.DataAccessObjects.PdfDAO;
 using Backend.EFCData;
@@ -18,6 +19,7 @@ builder.Services.AddScoped<ICredentialsInterface, CredentialsImplementation>();
 builder.Services.AddScoped<ILoginInterface, LoginImplementation>();
 builder.Services.AddScoped<IPDFInterface, PDFImplementation>();
 builder.Services.AddScoped<IChatSessionInterface, ChatSessionImplementation>();
+builder.Services.AddScoped<IConversationInterface, ConversationImplementation>();
 
 builder.Services.AddSingleton<IPromptProvider,PromptProvider>();
 builder.Services.AddSingleton<IEmbeddingProvider,EmbeddingProvide>(provider =>
