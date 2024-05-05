@@ -48,4 +48,26 @@ public class ChatSessionImplementation : IChatSessionInterface
         
         
     }
+
+    public Task<List<Chat_session>> GetChatSessionsByDate(DateTime startDate, DateTime endDate)
+    {
+        try
+        {
+           var startDateToUniversalTime= startDate.ToUniversalTime();
+           var endDateToUniversalTime = endDate.ToUniversalTime();
+            if(startDateToUniversalTime > endDateToUniversalTime)
+            {
+                throw new Exception("Start date cannot be greater than end date");
+            }
+            var chatSessions = _systemContext.Chat_sessions.Include(c => c.Conversations.OrderBy(con=>con.Id))
+                .Where(c => c.ChatTime.Date >= startDateToUniversalTime && c.ChatTime.Date <= endDateToUniversalTime && c.Conversations.Count>0)
+                .ToListAsync();
+            return chatSessions;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -42,4 +42,19 @@ public class ChatSessionController : ControllerBase
             return   StatusCode(500, e.Message);
         }
     }
+    [EnableCors]
+    [HttpGet]
+    [Route("ChatSessionsByDate")]
+    public async Task<ActionResult<List<Chat_session>>> GetChatSessionsByDate(DateTime startDate, DateTime endDate)
+    {
+        try
+        {
+            return StatusCode(200,await _chatSessionInterface.GetChatSessionsByDate(startDate,endDate)); 
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return   StatusCode(500, e.Message);
+        }
+    }
 }
