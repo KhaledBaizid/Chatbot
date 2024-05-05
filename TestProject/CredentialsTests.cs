@@ -52,6 +52,25 @@ public class CredentialsTests
     }
     
     [Test]
+    public async Task ShouldGetErrorMessage_WhenEditPassword_WithEmptyFields()
+    {
+        // Arrange
+        var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
+        await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
+        await context.SaveChangesAsync();
+        var service = new CredentialsImplementation(context);
+    
+        // Act
+        var result = await service.EditPasswordAsync(1, "password", "", "");
+    
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.EqualTo("New Password and re-entered Password cannot be empty"));
+        await context.Database.EnsureDeletedAsync();
+    }
+    
+    [Test]
     public async Task ShouldGetConfirmationMessage_WhenEditPassword_WithNewPasswordAndReEnterPasswordDoMatchAndCurrentPasswordIsValid()
     {
         // Arrange
@@ -110,6 +129,25 @@ public class CredentialsTests
     }
     
     [Test]
+    public async Task ShouldGetErrorMessage_WithEditEmail_WithEmptyFields()
+    {
+        // Arrange
+        var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
+        await context.Database.EnsureCreatedAsync();
+        await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
+        await context.SaveChangesAsync();
+        var service = new CredentialsImplementation(context);
+    
+        // Act
+        var result = await service.EditMailAsync(1, "password", "", "");
+    
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.EqualTo("New Mail and re-entered Mail cannot be empty"));
+        await context.Database.EnsureDeletedAsync();
+    }
+    
+    [Test]
     public async Task ShouldGetConfirmationMessage_WhenEditEmail_WithNewEmailAndReEnterEmailDoMatchAndCurrentPasswordIsValid()
     {
         // Arrange
@@ -127,5 +165,6 @@ public class CredentialsTests
         Assert.That(result, Is.EqualTo("EMail Changed"));
         await context.Database.EnsureDeletedAsync();
     }
+    
 
 }

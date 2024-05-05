@@ -57,6 +57,11 @@ public class CredentialsImplementation : ICredentialsInterface
     {
         try
         {
+            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(reenteredPassword))
+            {
+                return "New Password and re-entered Password cannot be empty";
+            }
+            
             var findAdmin = await _systemContext.Admins.FirstOrDefaultAsync(e => e.Id == id);
             if (findAdmin?.Password == password)
             {
@@ -84,6 +89,10 @@ public class CredentialsImplementation : ICredentialsInterface
 
     public async Task<string> EditMailAsync(int id, string password, string newMail, string reenteredMail)
     {
+        if (string.IsNullOrEmpty(newMail) || string.IsNullOrEmpty(reenteredMail))
+        {
+            return "New Mail and re-entered Mail cannot be empty";
+        }
         try
         {
             var findAdmin = await _systemContext.Admins.FirstOrDefaultAsync(e => e.Id == id);

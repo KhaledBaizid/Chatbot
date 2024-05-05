@@ -37,7 +37,7 @@ public class ChatSessionImplementation : IChatSessionInterface
     {
         try
         {
-            var chatSession =  await _systemContext.Chat_sessions.Include(c => c.Conversations).OrderByDescending(c=>c.Id).FirstAsync(c => c.Id == chatSessionId);
+            var chatSession =  await _systemContext.Chat_sessions.Include(c => c.Conversations.OrderBy(con=>con.Id)).FirstAsync(c => c.Id == chatSessionId);
             return chatSession;
         }
         catch (Exception e)

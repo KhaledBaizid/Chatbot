@@ -74,7 +74,7 @@ public class ConversationImplementation : IConversationInterface
             await _systemContext.SaveChangesAsync();
            
         //    }
-            var chatSession =  await _systemContext.Chat_sessions.Include(c => c.Conversations.OrderBy(con=>con.Id)).OrderByDescending(c=>c.Id).FirstAsync(c => c.Id == chatSessionId);
+            var chatSession = await _systemContext.Chat_sessions.Include(c => c.Conversations.OrderBy(con=>con.Id)).FirstAsync(c => c.Id == chatSessionId);
             return chatSession;
             
         }
@@ -93,6 +93,7 @@ public class ConversationImplementation : IConversationInterface
                 .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
                 .Where(x => x.Distance < 0.25)
                 .OrderBy(x => x.Distance)
+                .Take(30)
                 .ToListAsync();
             foreach (var chunk in chunks)
             { 
