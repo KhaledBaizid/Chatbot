@@ -1,8 +1,10 @@
 ﻿using Backend.Controllers.ChatSessionController;
 using Backend.DataAccessObjects.ChatSessionDAO;
 using Backend.EFCData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Shared;
 
 namespace TestProject;
 
@@ -26,4 +28,6 @@ public class ChatSessionTests
         await context.Database.EnsureDeletedAsync();
         
     }
+    
+   
 }
