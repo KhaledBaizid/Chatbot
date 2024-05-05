@@ -45,6 +45,7 @@ public class LoginTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Id, Is.EqualTo(-1));
+        Assert.That(result.Mail, Is.EqualTo("Credentials do not match"));
         await context.Database.EnsureDeletedAsync();
         }
     
@@ -64,6 +65,7 @@ public class LoginTests
         // Assert
         Assert.That(result, Is.Not.Null);
          Assert.That(result.Id, Is.EqualTo(-1));
+         Assert.That(result.Mail, Is.EqualTo("Credentials do not match"));
         await context.Database.EnsureDeletedAsync();
     }
     
@@ -81,6 +83,7 @@ public class LoginTests
     
         // Assert
         Assert.That(result, Is.Not.Null);
+        Assert.That(result.Mail, Is.EqualTo("Credentials do not match"));
         Assert.That(result.Id, Is.EqualTo(-1));
         await context.Database.EnsureDeletedAsync();
     }
@@ -95,11 +98,12 @@ public class LoginTests
         var service = new LoginImplementation(context);
     
         // Act
-        var result = await service.GetLoginAdminIdAsync("0", "0");
+        var result = await service.GetLoginAdminIdAsync("", "");
     
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Id, Is.EqualTo(-1));
+        Assert.That(result.Mail, Is.EqualTo("password and mail should not be empty"));
         await context.Database.EnsureDeletedAsync();
     }
     

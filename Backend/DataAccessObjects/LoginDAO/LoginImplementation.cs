@@ -16,6 +16,11 @@ public class LoginImplementation : ILoginInterface
         
         try
         {
+            if (string.IsNullOrEmpty(mail) || string.IsNullOrEmpty(password))
+            {
+                var emptyFields = new Shared.Admin { Id = -1, Mail = "password and mail should not be empty", Password = "" };
+                return emptyFields;
+            }
             var findAdmin = await _systemContext.Admins.FirstOrDefaultAsync(e => e.Mail.ToLower() == mail.ToLower());
             if (findAdmin?.Password == password)
             {
@@ -23,7 +28,7 @@ public class LoginImplementation : ILoginInterface
                 return findAdmin;
             }
 
-            var noAdminFound = new Shared.Admin { Id = -1, Mail = "", Password = "" };
+            var noAdminFound = new Shared.Admin { Id = -1, Mail = "Credentials do not match", Password = "" };
             return noAdminFound;
         }
         catch (Exception e)
