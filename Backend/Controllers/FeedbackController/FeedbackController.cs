@@ -1,6 +1,7 @@
 ﻿using Backend.DataAccessObjects.FeedbackDAO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 
 namespace Backend.Controllers.FeedbackController;
 
@@ -25,6 +26,21 @@ public class FeedbackController : ControllerBase
       }
       catch (Exception e)
       {
+         return   StatusCode(500, e.Message);
+      }
+   }
+   
+   [EnableCors]
+   [HttpGet]
+   public async Task<ActionResult<List<Conversation>>> GetConversationsByFeedbackAndByDate(DateTime startDate, DateTime endDate, string feedback)
+   {
+      try
+      {
+         return StatusCode(200,await _feedBackInterface.GetConversationsByFeedbackAndByDate(startDate,endDate,feedback)); 
+      }
+      catch (Exception e)
+      {
+         Console.WriteLine(e.Message);
          return   StatusCode(500, e.Message);
       }
    }
