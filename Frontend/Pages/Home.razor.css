@@ -1,0 +1,105 @@
+.mycontent {
+
+    height: 100vh;
+    width: 100%;
+
+
+}
+
+.leftside {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 99%, rgba(0, 212, 255, 1) 100%, rgba(98, 94, 193, 1) 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.rightside {
+
+
+    background: rgb(2, 0, 36);
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%);
+}
+
+#typingText {
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 10px;
+    font-size: 2em;
+
+
+}
+
+/* When the viewport is 768px or less (for tablets), make the font size smaller */
+@media (max-width: 768px) {
+    #typingText {
+        font-size: 1.5em;
+    }
+}
+
+/* When the viewport is 480px or less (for phones), make the font size even smaller */
+@media (max-width: 480px) {
+    #typingText {
+        font-size: 1em;
+    }
+}
+
+.chat-button-container {
+    position: fixed;
+    right: 10px;
+    bottom: 20px;
+
+}
+
+.chat-button {
+    background-color: #0a53be;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 0px;
+    padding: 20px;
+
+}
+
+.chat-label {
+
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+
+}
+
+.row {
+    --bs-gutter-x: 0px;
+}
+
+.parent{
+    height: 90vh;
+    width: 100%;
+    display: flex; /* Make this a flex container */
+    justify-content: center; /* Center children horizontally */
+    align-items: center; /* Center children vertically */
+}
+
+.myimg {
+    max-width: 100%;
+    max-height: 80vh; /* This will ensure the image height does not exceed the viewport height */
+   
+      box-shadow: 0 0 33px rgba(0, 0, 0, 1);
+   
+}
+.responsive-image {
+    max-width: 100%;
+    max-height: 100vh; /* This will ensure the image height does not exceed the viewport height */
+    height: auto;
+
+}

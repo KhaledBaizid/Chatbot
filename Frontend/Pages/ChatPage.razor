@@ -1,0 +1,65 @@
+﻿@page "/ChatPage"
+@using UploadFile.Models
+@layout MainPageComponent
+@inject IJSRuntime JSRuntime
+<div class="chatPage row  ">
+
+    <div class="chatlist col-xxl-2 col-xl-2 col-lg-2 col-md-5 col-sm-12">
+
+
+    </div>
+    <div class="chat-container col-xxl-10 col-xl-10 col-lg-10 col-md-7 col-sm-12">
+        <div class="insideContainer">
+            <div class="chat-messages" @ref="chatContainer">
+                @foreach (var message in messages)
+                {
+                    if (message.IsUser)
+                    {
+                        <div class="contentUserMsg">
+                            <i class="fas fa-user icon"></i>
+                            <p class="message user-message"> You: @message.Text</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="contentChatMsg">
+                            <i class="fas fa-robot icon"></i>
+                            <p class="message chatbot-message"> Server: @message.Text</p>
+                        </div>
+                    }
+                }
+            </div>
+            <input @bind="userInput" @onkeyup="HandleKeyUp"/>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    string userInput = "";
+    List<Message> messages = new List<Message>();
+    List<string> responses = new List<string> { "Response 1", "Response 2", "Response 3" }; // Add your responses here
+    Random random = new Random();
+    ElementReference chatContainer;
+
+    async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(userInput))
+        {
+            messages.Add(new Message { Text = userInput, IsUser = true });
+            var response = responses[random.Next(responses.Count)]; // Select a random response
+            messages.Add(new Message { Text = response, IsUser = false });
+            userInput = "";
+            //await ScrollToBottom();
+        }
+    }
+
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(100); // Wait for 100 milliseconds
+        await JSRuntime.InvokeVoidAsync("scrollToBottom", chatContainer);
+    }
+
+}
