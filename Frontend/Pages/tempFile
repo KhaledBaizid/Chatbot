@@ -1,0 +1,62 @@
+﻿
+.chat-messages {
+    height: 400px;
+    overflow-y: auto;
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 33px rgba(0, 0, 0, 1);
+}
+
+.chat-messages p {
+    margin-top: 5px;
+    line-height: 2.4;
+
+
+}
+
+.chat-messages p:last-child {
+    margin-bottom: 0;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.message {
+    transition: all 0.3s ease-in-out; /* This will make the changes happen smoothly over 0.3 seconds */
+    background-color: white;
+    color: black;
+    margin: 10px;
+    box-shadow: 0 0 4px rgb(255, 255, 255);
+    border-radius: 5px;
+    padding: 5px;
+
+
+    display: inline-block; /* Add this line */
+    max-width: 90%; /* Add this line */
+    word-wrap: break-word; /* Add this line */
+}
+
+.message:hover {
+    color: black;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+    transform: scale(1.02); /* Increase the size of the element on hover */
+}
+
+.user-message {
+    text-align: right;
+    color: #01015e;
+
+}
+
+.chatbot-message {
+    text-align: left;
+    color: #01015e;
+}
