@@ -4,5 +4,5 @@ namespace Frontend.Services;
 
 public interface ILoginService
 {
-    Task<User?> Login(User user);
+    Task<Admin?> Login(Admin user);
 }

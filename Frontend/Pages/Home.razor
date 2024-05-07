@@ -6,11 +6,13 @@
 @using Microsoft.AspNetCore.Components.Authorization
 <AuthorizeView>
     <NotAuthorized>
-
+ 
         <div class="mycontent">
             <div class="row">
                 <div class="leftside col-lg-5 col-md-5 col-sm-12">
-                <h1 id="typingText"><Typewriter Builder="@typewriter" /></h1>
+                    <h1 id="typingText">
+                        <Typewriter Builder="@typewriter"/>
+                    </h1>
                 </div>
 
                 <div class="rightside col-lg-7 col-md-7 col-sm-12">
@@ -35,7 +37,7 @@
 
 
         </div>
-
+ 
     </NotAuthorized>
 
     <Authorized>
@@ -43,17 +45,23 @@
         {
             var userEmail = context.User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             <h3>Hello, @context.User.Identity.Name</h3>
+            
+            var id = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
             <h4>Email: @userEmail</h4>
+            
+            <h4>id: @id</h4>
             <div class="mycontent">
                 <div class="row">
                     <div class="leftside col-lg-5 col-md-5 col-sm-12">
-                        <h1 id="typingText"></h1>
+                        <h1 id="typingText">
+                            <Typewriter Builder="@typewriter"/>
+                        </h1>
                     </div>
 
                     <div class="rightside col-lg-7 col-md-7 col-sm-12">
-                        <div>
-                            <img src="Images/Graident%20Ai%20Robot.jpg" class="myimg"/>
+                        <div class="parent">
+                            <img src="Images/Graident%20Ai%20Robot1.png" class="myimg"/>
                         </div>
                     </div>
                 </div>
@@ -79,11 +87,10 @@
 </AuthorizeView>
 
 @code {
-   
-    private TypewriterBuilder typewriter;
- 
 
-  
+    private TypewriterBuilder typewriter;
+
+
     protected override async Task OnInitializedAsync()
     {
         typewriter = new TypewriterBuilder(defaultCharacterPause: 100)
@@ -99,4 +106,5 @@
             .Pause(2000)
             .Loop();
     }
+
 }

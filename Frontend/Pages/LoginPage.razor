@@ -6,6 +6,15 @@
 @inject NavigationManager NavigationManager
 @using Microsoft.AspNetCore.Components.Authorization
 
+<style>
+    
+   body{
+          background: rgb(2, 0, 36);
+          background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%);
+   }
+    
+</style>
+
 <AuthorizeView>
  <NotAuthorized>
         <section class=" vh-100  gradient-custom">
@@ -34,7 +43,7 @@
             
                                     <button class="btn btn-outline-light btn-lg px-5" @onclick="Login">Login</button>
             
-                                
+                                <p>@errorMessage</p>
             
                                 </div>
             
@@ -70,16 +79,31 @@
 
     public async Task Login()
     {
-        if (Mail != null || Password != null)
+        try
         {
-            var user = new User { Mail = Mail, Password = Password };
+            if (Mail != null || Password != null)
+            {
+                var admin = new Admin() { Mail = Mail, Password = Password };
 
-            await AuthManager.LoginAsync(user);
-            NavigationManager.NavigateTo("/");
+                Admin response =  await AuthManager.LoginAsync(admin);
+
+                if (response.Id == -1)
+                {
+                    errorMessage = "Please make sure your mail and password are correct.";
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+            else
+            {
+                errorMessage = "Please make sure your mail and password are correct.";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            errorMessage = "Please make sure your mail and password are correct.";
+            errorMessage = ex.Message;
         }
     }
 

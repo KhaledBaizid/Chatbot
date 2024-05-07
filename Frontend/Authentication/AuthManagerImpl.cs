@@ -22,9 +22,9 @@ public class AuthManagerImpl : IAuthManager
         this.jsRuntime = jsRuntime;
     }
 
-    public async Task LoginAsync(User? user)
+    public async Task<Admin> LoginAsync(Admin? admin)
     {
-        User? returnedUser = await userService.Login(user); // Get user from database
+        Admin? returnedUser = await userService.Login(admin); // Get user from database
         int password = returnedUser.Id;
         userId = returnedUser.Id;
 
@@ -36,11 +36,13 @@ public class AuthManagerImpl : IAuthManager
         ClaimsPrincipal principal = CreateClaimsPrincipal(returnedUser); // convert user object to ClaimsPrincipal
 
         OnAuthStateChanged?.Invoke(principal); // notify interested classes in the change of authentication state
+        
+        return returnedUser;
     }
 
     public async Task<int> GetUserIdFromCache()
     {
-        User? user = await GetUserFromCacheAsync();
+        Admin? user = await GetUserFromCacheAsync();
         return user?.Id ?? 0;
     }
 
@@ -60,20 +62,20 @@ public class AuthManagerImpl : IAuthManager
     public async Task<ClaimsPrincipal>
         GetAuthAsync() // this method is called by the authentication framework, whenever user credentials are reguired
     {
-        User? user = await GetUserFromCacheAsync(); // retrieve cached user, if any
+        Admin? admin = await GetUserFromCacheAsync(); // retrieve cached user, if any
 
-        ClaimsPrincipal principal = CreateClaimsPrincipal(user); // create ClaimsPrincipal
+        ClaimsPrincipal principal = CreateClaimsPrincipal(admin); // create ClaimsPrincipal
 
         return principal;
     }
 
-    private async Task<User?> GetUserFromCacheAsync()
+    private async Task<Admin?> GetUserFromCacheAsync()
     {
         string userAsJson = await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
         if (string.IsNullOrEmpty(userAsJson)) return null;
-        User user = JsonSerializer.Deserialize<User>(userAsJson)!;
+        Admin admin = JsonSerializer.Deserialize<Admin>(userAsJson)!;
 
-        return user;
+        return admin;
     }
 
 
@@ -86,18 +88,18 @@ public class AuthManagerImpl : IAuthManager
     }
 
 
-    private static ClaimsPrincipal CreateClaimsPrincipal(User? user)
+    private static ClaimsPrincipal CreateClaimsPrincipal(Admin? admin)
     {
-        if (user != null)
+        if (admin != null)
         {
-            ClaimsIdentity identity = ConvertUserToClaimsIdentity(user);
+            ClaimsIdentity identity = ConvertUserToClaimsIdentity(admin);
             return new ClaimsPrincipal(identity);
         }
 
         return new ClaimsPrincipal();
     }
 
-    private async Task CacheUserAsync(User? user)
+    private async Task CacheUserAsync(Admin? user)
     {
         string serialisedData = JsonSerializer.Serialize(user);
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
@@ -108,7 +110,7 @@ public class AuthManagerImpl : IAuthManager
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", "");
     }
 
-    private static ClaimsIdentity ConvertUserToClaimsIdentity(User user)
+    private static ClaimsIdentity ConvertUserToClaimsIdentity(Admin admin)
     {
         /*
         // here we take the information of the User object and convert to Claims
@@ -126,9 +128,10 @@ public class AuthManagerImpl : IAuthManager
         */
         var claims = new List<Claim>();
 
-        if (!string.IsNullOrEmpty(user.Mail))
+        if (!string.IsNullOrEmpty(admin.Mail))
         {
-            claims.Add(new Claim(ClaimTypes.Email, user.Mail));
+            claims.Add(new Claim(ClaimTypes.Email, admin.Mail));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()));
         }
 
         // Add similar checks for other properties of the User object
