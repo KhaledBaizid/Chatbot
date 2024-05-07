@@ -1,7 +1,10 @@
 ﻿@page "/UploadFilePage"
 @using UploadFile.Models
 @using Frontend.Services
+
 @inject IUploadFileService blobStorageService
+@inject SweetAlertService MySweetAlertService
+@inject NavigationManager NavigationManager
 
 <style>
     
@@ -25,9 +28,9 @@
         </div>
     }
 
-    <h4>File Upload (Azure Blob Storage)</h4>
+
     <div class="row divWidth">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <label>
                 <InputFile class="form-control" disabled="@fileLoading" OnChange="@OnInputFileChange" single/>
             </label>
@@ -43,12 +46,14 @@
             </button>
         </div>
     </div>
+    @*
     @if (displayMessage.Length > 0)
     {
         <div class="alert alert-success">
             <strong>Success!</strong> @displayMessage.
         </div>
     }
+    *@
     <br/>
     <div class="row divWidth">
         @if (fileUploadViewModels.Count > 0)
@@ -57,7 +62,7 @@
                 <thead class="text-primary">
                 <tr>
                     <th>File</th>
-                    <th>Action</th>
+                    <th class="action">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -125,6 +130,7 @@
             {
                 var trustedFileNameForFileStorage = RemoveSpacesBetweenWords(file.Name);
                 var blobUrl = await blobStorageService.UploadFileToBlobAsync(trustedFileNameForFileStorage, file.ContentType, file.OpenReadStream(20971520));
+                var response = await blobStorageService.SendFileUrl(blobUrl);
                 if (blobUrl != null)
                 {
                     FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
@@ -136,10 +142,18 @@
 
                     fileUploadViewModels.Add(fileUploadViewModel);
                     displayMessage = trustedFileNameForFileStorage + " Uploaded!!";
-                    await OnInitializedAsync();
                 }
+
                 else
                     warninngMessage = "File Upload failed, Please try again!!";
+
+
+                if (response == "pdf is added successfully")
+                {
+                    await ShowAlert("Your file has been saved");
+                }
+
+                await OnInitializedAsync();
             }
             catch (Exception ex)
             {
@@ -162,11 +176,20 @@
         try
         {
             var deleteResponse = await blobStorageService.DeleteFileToBlobAsync(attachment.FileName);
+            var response = await blobStorageService.DeleteFileUrl(attachment.FileStorageUrl);
             if (deleteResponse)
             {
                 fileUploadViewModels.Remove(attachment);
                 displayMessage = attachment.FileName + " Deleted!!";
+
+
+                if (response == "pdf is deleted successfully")
+                {
+                    await ShowAlert("Your file has been deleted");
+                }
             }
+
+            await OnInitializedAsync();
         }
         catch (Exception)
         {
@@ -175,5 +198,19 @@
 
         this.StateHasChanged();
     }
+
+
+    public async Task ShowAlert(string msg)
+    {
+        await MySweetAlertService.FireAsync(new SweetAlertOptions
+        {
+            Position = SweetAlertPosition.Center,
+            Icon = SweetAlertIcon.Success,
+            Title = "Your file has been saved",
+            ShowConfirmButton = false,
+            Timer = 2000
+        });
+    }
+
 
 }

@@ -45,11 +45,16 @@
     margin-bottom: 5px;
     
 }
-
+.Managebtn{
+    margin-left: 5px !important;
+    height: 40px;
+    min-width:140px;
+    margin-bottom: 5px;
+}
 .Uploadbtn{
     margin-left: 5px !important;
     height: 40px;
-    width:180px;
+    min-width:110px;
     margin-bottom: 5px;
 
 }

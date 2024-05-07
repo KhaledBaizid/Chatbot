@@ -1,3 +1,4 @@
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Frontend;
@@ -16,5 +17,6 @@ builder.Services.AddScoped<IAuthManager, AuthManagerImpl>();
 builder.Services.AddScoped<ICredentialService, CredentialService>();
 builder.Services.AddScoped<IUploadFileService, UploadFileService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddSweetAlert2();
 builder.Services.AddAuthorizationCore();
 await builder.Build().RunAsync();
