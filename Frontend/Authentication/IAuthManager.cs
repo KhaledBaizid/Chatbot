@@ -5,7 +5,7 @@ namespace Frontend.Authentication;
 
 public interface IAuthManager
 {
-    public Task LoginAsync(User? user);
+    public Task<Admin> LoginAsync(Admin? user);
     
     Task<int> GetUserId();
     public Task LogoutAsync();

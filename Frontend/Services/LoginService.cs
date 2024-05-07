@@ -12,14 +12,14 @@ public class LoginService : ILoginService
         this.httpClient = httpClient;
     }
 
-    public async Task<User?> Login(User user)
+    public async Task<Admin?> Login(Admin admin)
     {
-        string mail = user.Mail;
-        string password = user.Password;
+        string mail = admin.Mail;
+        string password = admin.Password;
 
 
-        var Response = await httpClient.GetFromJsonAsync<User>($"/User?mail={mail}&password={password}");
-        return Response;
+        var response = await httpClient.GetFromJsonAsync<Admin>($"/Login?mail={mail}&password={password}");
+        return response;
              
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using Frontend.Authentication
 @inject IAuthManager iAuthService;
 @inject NavigationManager NavigationManager;
- @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 <AuthorizeView>
     <NotAuthorized>
         <nav class="mynavbar navbar navbar-expand-md navbar-dark bg-dark mb-0">
@@ -15,11 +15,20 @@
                 </button>
 
                 <div class="collapse navbar-collapse @NavBarCssClass" id="navbarCollapse" @onclick="ToggleNavMenu">
+
+
+                    <button class="homebtn btn btn-outline-success  " @onclick="Login">Home</button>
+
+
+                    @* <a class="navbar-brand" href="">Home</a> *@
+                    @* <a class="navbar-brand" href="">Manage Login</a> *@
+
+
                     <ul class="navbar-nav me-auto mb-2 mb-md-0 homeItem">
 
 
                         <li class="nav-item text-item-li">
-                               <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Login">Admin Login</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Login">Admin Login</button>
                             @* <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
                             @*     <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Login">Admin Login</button> *@
                             @*     $1$ <span class="oi oi-home" aria-hidden="true"  ></span>  #1# *@
@@ -32,36 +41,38 @@
         </nav>
     </NotAuthorized>
     <Authorized>
-             <nav class="mynavbar navbar navbar-expand-md navbar-dark bg-dark mb-0">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="">Chatbot AI</a>
-        
-        
-                        <button class="navbar-toggler @NavButtonCssClass" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                                aria-controls="navbarCollapse" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-        
-                        <div class="collapse navbar-collapse @NavBarCssClass" id="navbarCollapse" @onclick="ToggleNavMenu">
-        
-        
-                            <ul class="navbar-nav me-auto mb-2 mb-md-0 homeItem">
-        
-        
-                                <li class="nav-item text-item-li">
-                                    <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">Logout</button>
-                                    @* *@
-                                    @* <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
-                                    @*     <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">Logout</button> *@
-                                    @*     <span class="oi oi-home" aria-hidden="true"></span> *@
-                                    @* </NavLink> *@
-                                </li>
-        
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-        
+        <nav class="mynavbar navbar navbar-expand-md navbar-dark bg-dark mb-0">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="">Chatbot AI</a>
+
+
+                <button class="navbar-toggler @NavButtonCssClass" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                        aria-controls="navbarCollapse" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse @NavBarCssClass" id="navbarCollapse" @onclick="ToggleNavMenu">
+
+                    <button class="homebtn btn btn-outline-success  " @onclick="HomePage">Home</button>
+                    <button class="loginbtn btn btn-outline-success " @onclick="GoToManageCredential">Manage Login</button>
+                     <button class="Uploadbtn btn btn-outline-success " @onclick="UploadFilePage">Upload File</button>
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0 homeItem">
+
+
+                        <li class="nav-item text-item-li">
+                            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">Logout</button>
+                            @* *@
+                            @* <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
+                            @*     <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">Logout</button> *@
+                            @*     <span class="oi oi-home" aria-hidden="true"></span> *@
+                            @* </NavLink> *@
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
     </Authorized>
 
 </AuthorizeView>
@@ -75,9 +86,25 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
     protected async Task Login()
     {
         NavigationManager.NavigateTo("/LoginPage");
+    }
+    
+    protected async Task GoToManageCredential()
+    {
+        NavigationManager.NavigateTo("/ManageLoginCredential");
+    }
+
+    protected async Task HomePage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    
+    protected async Task UploadFilePage()
+    {
+        NavigationManager.NavigateTo("/UploadFilePage");
     }
 
     protected async Task Logout()
@@ -86,4 +113,5 @@
 
         await iAuthService.LogoutAsync();
     }
+
 }

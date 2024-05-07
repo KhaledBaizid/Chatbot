@@ -32,3 +32,24 @@
 .nav-item{
     width: 120px;
 }
+.homebtn{
+    
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.loginbtn{
+    margin-left: 5px !important;
+    height: 40px;
+    width:180px;
+    margin-bottom: 5px;
+    
+}
+
+.Uploadbtn{
+    margin-left: 5px !important;
+    height: 40px;
+    width:180px;
+    margin-bottom: 5px;
+
+}
