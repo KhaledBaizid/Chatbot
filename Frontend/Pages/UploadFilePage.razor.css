@@ -1,6 +1,69 @@
 .divWidth{
     width: 100% !important;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 33px rgba(0, 0, 0, 1);
 }
 .root{
     margin: 15px;
+}
+ 
+.table {
+    border-collapse: separate;
+    border-spacing: 10px;
+    border: none;
+    color: yellow;
+    
+}
+
+.table th, .table td {
+    
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    mergin-left: 20px;
+    color: yellow;
+   
+  
+    
+}
+
+.table tr:hover {
+ 
+    box-shadow: 0 0 33px rgba(0, 0, 0, 0.5);
+}
+
+.action{
+    justify-content: center;
+    display: flex;
+}
+
+.oi {
+    font-size: 30px; /* Adjust this value to make the icon bigger or smaller */
+    justify-content: center;
+    display: flex;
+}
+.oi-delete {
+    font-size: 30px; /* Adjust this value to make the icon bigger or smaller */
+    justify-content: center;
+    display: flex;
+}
+
+.oi-delete:hover {
+    color: red;
+}
+.btn-primary {
+    background-color: yellow;
+    color: blue;
+    width: 110px;
+     
+}
+.text-primary {
+    color: yellow !important;
+}
+@media (max-width: 575px ) {
+    .btn-primary {
+        margin-top: 10px;
+    }
 }
