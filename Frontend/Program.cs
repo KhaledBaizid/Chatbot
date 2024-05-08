@@ -16,6 +16,8 @@ builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthenticationStat
 builder.Services.AddScoped<IAuthManager, AuthManagerImpl>();
 builder.Services.AddScoped<ICredentialService, CredentialService>();
 builder.Services.AddScoped<IUploadFileService, UploadFileService>();
+builder.Services.AddScoped<IChatSessionService, ChatSessionService>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddSweetAlert2();
 builder.Services.AddAuthorizationCore();
