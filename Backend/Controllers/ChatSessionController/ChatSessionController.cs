@@ -31,11 +31,11 @@ public class ChatSessionController : ControllerBase
     }
     [EnableCors]
     [HttpGet]
-    public async Task<ActionResult<Chat_session>> getChatSessionById(int chatSessionId)
+    public async Task<ActionResult<Chat_session>> GetChatSessionById(int chatSessionId)
     {
         try
         {
-            return StatusCode(200,await _chatSessionInterface.getChatSessionById(chatSessionId)); 
+            return StatusCode(200,await _chatSessionInterface.GetChatSessionByIdAsync(chatSessionId)); 
         }
         catch (Exception e)
         {

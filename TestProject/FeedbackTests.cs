@@ -14,8 +14,8 @@ public class FeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
-        var service2 = new ChatSessionImplementation(context);
+        var service = new FeedbackDAO(context);
+        var service2 = new ChatSessionDAO(context);
         var chatSessionId = await service2.StartChatSessionAsync();
         var conversation = new Conversation
         { ChatSessionId = chatSessionId,
@@ -27,7 +27,7 @@ public class FeedbackTests
         await context.SaveChangesAsync();
         // Act
         
-        var result = await service.giveFeedback(1, "Positive");
+        var result = await service.GiveFeedbackAsync(1, "Positive");
        
         
         // Assert
@@ -43,8 +43,8 @@ public class FeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
-        var service2 = new ChatSessionImplementation(context);
+        var service = new FeedbackDAO(context);
+        var service2 = new ChatSessionDAO(context);
         var chatSessionId = await service2.StartChatSessionAsync();
         var conversation = new Conversation
         { ChatSessionId = chatSessionId,
@@ -56,7 +56,7 @@ public class FeedbackTests
         await context.SaveChangesAsync();
         // Act
         
-        var result = await service.giveFeedback(1, "Negative");
+        var result = await service.GiveFeedbackAsync(1, "Negative");
        
         
         // Assert

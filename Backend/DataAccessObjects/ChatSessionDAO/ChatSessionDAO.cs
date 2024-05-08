@@ -4,11 +4,11 @@ using Shared;
 
 namespace Backend.DataAccessObjects.ChatSessionDAO;
 
-public class ChatSessionImplementation : IChatSessionInterface
+public class ChatSessionDAO : IChatSessionInterface
 {
     private readonly DataContext _systemContext;
 
-    public ChatSessionImplementation(DataContext systemContext)
+    public ChatSessionDAO(DataContext systemContext)
     {
         _systemContext = systemContext;
     }
@@ -33,7 +33,7 @@ public class ChatSessionImplementation : IChatSessionInterface
         throw new NotImplementedException();
     }
 
-    public async Task<Chat_session> getChatSessionById(int chatSessionId)
+    public async Task<Chat_session> GetChatSessionByIdAsync(int chatSessionId)
     {
         try
         {

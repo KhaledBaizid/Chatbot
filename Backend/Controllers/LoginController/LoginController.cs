@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controllers.AdminController;
+namespace Backend.Controllers.LoginController;
 
 [ApiController]
 [Route("[controller]")]

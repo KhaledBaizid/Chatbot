@@ -22,7 +22,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditPasswordAsync(1, "password1", "newPassword", "newPassword");
@@ -40,7 +40,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditPasswordAsync(1, "password", "newPassword", "newPassword1");
@@ -59,7 +59,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditPasswordAsync(1, "password", "", "");
@@ -78,7 +78,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditPasswordAsync(1, "password", "newPassword", "newPassword");
@@ -99,7 +99,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditMailAsync(1, "password1", "newEmail@test.com", "newEmail@test.com");
@@ -117,7 +117,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditMailAsync(1, "password", "newEmail@test.com", "newEmail123@test.com");
@@ -136,7 +136,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditMailAsync(1, "password", "", "");
@@ -155,7 +155,7 @@ public class CredentialsTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new CredentialsImplementation(context);
+        var service = new CredentialsDAO(context);
     
         // Act
         var result = await service.EditMailAsync(1, "password", "newEmail@test.com", "newEmail@test.com");
