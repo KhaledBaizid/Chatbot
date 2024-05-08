@@ -13,13 +13,13 @@ using UglyToad.PdfPig.Writer;
 
 namespace Backend.DataAccessObjects.PdfDAO;
 
-public class PDFImplementation : IPDFInterface
+public class PDFDAO : IPDFInterface
 {
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
     private readonly IPromptProvider _promptProvider;
 
-    public PDFImplementation(DataContext systemContext, IEmbeddingProvider embeddingProvider, IPromptProvider promptProvider)
+    public PDFDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, IPromptProvider promptProvider)
     {
         _systemContext = systemContext;
         _embeddingProvider = embeddingProvider;
@@ -38,7 +38,7 @@ public class PDFImplementation : IPDFInterface
                 var response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
-                    /* handle the error */
+                   return ("url is not valid");
                 }
 
                 var bytes = await response.Content.ReadAsStreamAsync();
@@ -107,7 +107,7 @@ public class PDFImplementation : IPDFInterface
                 await _systemContext.SaveChangesAsync();
                 return "pdf is deleted successfully";
             }
-            return "pdf is not found";
+            return "URL does not exist";
         }
         catch (Exception e)
         {

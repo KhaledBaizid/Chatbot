@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.DataAccessObjects.LoginDAO;
 
-public class LoginImplementation : ILoginInterface
+public class LoginDAO : ILoginInterface
 {
     private readonly DataContext _systemContext;
-    public LoginImplementation(DataContext systemContext)
+    public LoginDAO(DataContext systemContext)
     {
         _systemContext = systemContext;
     }

@@ -3,16 +3,16 @@ using Shared;
 
 namespace Backend.DataAccessObjects.FeedbackDAO;
 
-public class FeedbackImplementation: IFeedBackInterface
+public class FeedbackDAO: IFeedBackInterface
 {
     private readonly DataContext _systemContext;
 
-    public FeedbackImplementation(DataContext systemContext)
+    public FeedbackDAO(DataContext systemContext)
     {
         _systemContext = systemContext;
     }
 
-    public async Task<string> giveFeedback(int conversationId,string feedback)
+    public async Task<string> GiveFeedbackAsync(int conversationId,string feedback)
     {
         var conversation = await _systemContext.Conversations.FindAsync(conversationId);
         if (conversation != null) conversation.Feedback = feedback;
@@ -30,7 +30,7 @@ public class FeedbackImplementation: IFeedBackInterface
             
     }
 
-    public Task<List<Conversation>> GetConversationsByFeedbackAndByDate(DateTime startDate, DateTime endDate, string feedback)
+    public Task<List<Conversation>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
     {
         try
         {

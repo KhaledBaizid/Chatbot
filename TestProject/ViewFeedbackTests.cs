@@ -15,7 +15,7 @@ public class ViewFeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
+        var service = new FeedbackDAO(context);
     
         // Create some mock conversations in the database
         var startDate = DateTime.Now.AddDays(-1);
@@ -30,7 +30,7 @@ public class ViewFeedbackTests
         await context.SaveChangesAsync();
     
         // Act
-        var result = await service.GetConversationsByFeedbackAndByDate(startDate, endDate, positiveFeedback);
+        var result = await service.GetConversationsByFeedbackAndByDateAsync(startDate, endDate, positiveFeedback);
     
         // Assert
         Assert.IsNotNull(result);
@@ -45,7 +45,7 @@ public class ViewFeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
+        var service = new FeedbackDAO(context);
       
         var startDate = DateTime.Now.AddDays(1); // Start date greater than end date
         var endDate = DateTime.Now;
@@ -60,7 +60,7 @@ public class ViewFeedbackTests
         // Act
         var exception =   Assert.ThrowsAsync<Exception>(async () =>
         {
-            await service.GetConversationsByFeedbackAndByDate(startDate, endDate, positiveFeedback);
+            await service.GetConversationsByFeedbackAndByDateAsync(startDate, endDate, positiveFeedback);
         });
         
         // Assert
@@ -74,7 +74,7 @@ public class ViewFeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
+        var service = new FeedbackDAO(context);
     
         // Create some mock conversations in the database
         var startDate = DateTime.Now.AddDays(-1);
@@ -90,7 +90,7 @@ public class ViewFeedbackTests
         await context.SaveChangesAsync();
     
         // Act
-        var result = await service.GetConversationsByFeedbackAndByDate(startDate, endDate,negativeFeedback );
+        var result = await service.GetConversationsByFeedbackAndByDateAsync(startDate, endDate,negativeFeedback );
     
         // Assert
         Assert.IsNotNull(result);
@@ -105,7 +105,7 @@ public class ViewFeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
+        var service = new FeedbackDAO(context);
       
         var startDate = DateTime.Now.AddDays(1); // Start date greater than end date
         var endDate = DateTime.Now;
@@ -120,7 +120,7 @@ public class ViewFeedbackTests
         // Act
         var exception =   Assert.ThrowsAsync<Exception>(async () =>
         {
-            await service.GetConversationsByFeedbackAndByDate(startDate, endDate, negativeFeedback);
+            await service.GetConversationsByFeedbackAndByDateAsync(startDate, endDate, negativeFeedback);
         });
         
         // Assert
@@ -134,7 +134,7 @@ public class ViewFeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
+        var service = new FeedbackDAO(context);
     
         // Create some mock conversations in the database
         var startDate = DateTime.Now.AddDays(-1);
@@ -150,7 +150,7 @@ public class ViewFeedbackTests
         await context.SaveChangesAsync();
     
         // Act
-        var result = await service.GetConversationsByFeedbackAndByDate(startDate, endDate,neutralFeedback );
+        var result = await service.GetConversationsByFeedbackAndByDateAsync(startDate, endDate,neutralFeedback );
     
         // Assert
         Assert.IsNotNull(result);
@@ -165,7 +165,7 @@ public class ViewFeedbackTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new FeedbackImplementation(context);
+        var service = new FeedbackDAO(context);
       
         var startDate = DateTime.Now.AddDays(1); // Start date greater than end date
         var endDate = DateTime.Now;
@@ -180,7 +180,7 @@ public class ViewFeedbackTests
         // Act
         var exception =   Assert.ThrowsAsync<Exception>(async () =>
         {
-            await service.GetConversationsByFeedbackAndByDate(startDate, endDate, neutralFeedback);
+            await service.GetConversationsByFeedbackAndByDateAsync(startDate, endDate, neutralFeedback);
         });
         
         // Assert

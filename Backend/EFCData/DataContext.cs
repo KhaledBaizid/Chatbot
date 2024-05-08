@@ -26,7 +26,7 @@ public class DataContext : DbContext
     
     private readonly IConfiguration _configuration;
     private readonly bool _useInMemoryDatabase;
-    private readonly DbContextOptions<DataContext> _options;
+   // private readonly DbContextOptions<DataContext> _options;
     public DataContext(IConfiguration configuration, bool useInMemoryDatabase = false)
     {
         _configuration = configuration;

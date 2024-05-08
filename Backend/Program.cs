@@ -16,12 +16,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>();
-builder.Services.AddScoped<ICredentialsInterface, CredentialsImplementation>();
-builder.Services.AddScoped<ILoginInterface, LoginImplementation>();
-builder.Services.AddScoped<IPDFInterface, PDFImplementation>();
-builder.Services.AddScoped<IChatSessionInterface, ChatSessionImplementation>();
-builder.Services.AddScoped<IConversationInterface, ConversationImplementation>();
-builder.Services.AddScoped<IFeedBackInterface, FeedbackImplementation>();
+builder.Services.AddScoped<ICredentialsInterface, CredentialsDAO>();
+builder.Services.AddScoped<ILoginInterface, LoginDAO>();
+builder.Services.AddScoped<IPDFInterface, PDFDAO>();
+builder.Services.AddScoped<IChatSessionInterface, ChatSessionDAO>();
+builder.Services.AddScoped<IConversationInterface, ConversationDAO>();
+builder.Services.AddScoped<IFeedBackInterface, FeedbackDAO>();
 
 builder.Services.AddSingleton<IPromptProvider,PromptProvider>();
 builder.Services.AddSingleton<IEmbeddingProvider,EmbeddingProvide>(provider =>

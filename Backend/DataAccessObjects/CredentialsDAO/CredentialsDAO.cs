@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.DataAccessObjects.Admin;
 
-public class CredentialsImplementation : ICredentialsInterface
+public class CredentialsDAO : ICredentialsInterface
 {
     private readonly DataContext _systemContext;
 
-    public CredentialsImplementation(DataContext systemContext)
+    public CredentialsDAO(DataContext systemContext)
     {
         _systemContext = systemContext;
     }

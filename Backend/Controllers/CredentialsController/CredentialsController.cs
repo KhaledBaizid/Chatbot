@@ -32,7 +32,7 @@ public class CredentialsController : ControllerBase
     
     [EnableCors]
     [HttpPut]
-    [Route("password")]
+   
     public async Task<ActionResult<string>> EditPasswordAsync(int id, string password, string newPassword, string reenteredPassword)
     {
         try

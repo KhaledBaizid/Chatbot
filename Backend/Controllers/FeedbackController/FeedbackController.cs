@@ -18,11 +18,11 @@ public class FeedbackController : ControllerBase
 
    [EnableCors]
    [HttpPut]
-   public async Task<ActionResult<string>> giveFeedback(int conversationId, string feedback)
+   public async Task<ActionResult<string>> GiveFeedbackAsync(int conversationId, string feedback)
    {
       try
       {
-         return StatusCode(200,await _feedBackInterface.giveFeedback(conversationId,feedback)); 
+         return StatusCode(200,await _feedBackInterface.GiveFeedbackAsync(conversationId,feedback)); 
       }
       catch (Exception e)
       {
@@ -32,11 +32,12 @@ public class FeedbackController : ControllerBase
    
    [EnableCors]
    [HttpGet]
-   public async Task<ActionResult<List<Conversation>>> GetConversationsByFeedbackAndByDate(DateTime startDate, DateTime endDate, string feedback)
+   
+   public async Task<ActionResult<List<Conversation>>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
    {
       try
       {
-         return StatusCode(200,await _feedBackInterface.GetConversationsByFeedbackAndByDate(startDate,endDate,feedback)); 
+         return StatusCode(200,await _feedBackInterface.GetConversationsByFeedbackAndByDateAsync(startDate,endDate,feedback)); 
       }
       catch (Exception e)
       {

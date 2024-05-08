@@ -9,20 +9,20 @@ using Shared;
 
 namespace Backend.DataAccessObjects.ConversationDAO;
 
-public class ConversationImplementation : IConversationInterface
+public class ConversationDAO : IConversationInterface
 {
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
     private readonly IPromptProvider _promptProvider;
 
-    public ConversationImplementation(DataContext systemContext, IEmbeddingProvider embeddingProvider, IPromptProvider promptProvider)
+    public ConversationDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, IPromptProvider promptProvider)
     {
         _systemContext = systemContext;
         _embeddingProvider = embeddingProvider;
         _promptProvider = promptProvider;
     }
 
-    public  async Task<Chat_session> GetConversationByChatSessionId(int chatSessionId,string question,int timeOutSeconds)
+    public  async Task<Chat_session> GetConversationByChatSessionIdAsync(int chatSessionId,string question,int timeOutSeconds)
     {
         try
         { 
@@ -91,15 +91,37 @@ public class ConversationImplementation : IConversationInterface
        
             var chunks = await _systemContext.Chunks
                 .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
-                .Where(x => x.Distance < 0.25)
+                .Where(x => x.Distance < 0.20)
                 .OrderBy(x => x.Distance)
-                .Take(30)
+                .Take(10)
                 .ToListAsync();
             foreach (var chunk in chunks)
-            { 
-                chunksText += chunk.Entity.Text;
+            {  Console.WriteLine(chunk.Distance);
+                chunksText += chunk.Entity.Text+" ";
             }
         return chunksText;
+    }
+    
+    
+    public Task<List<Conversation>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
+    {
+        try
+        {
+            var startDateToUniversalTime = startDate.ToUniversalTime();
+            var endDateToUniversalTime = endDate.ToUniversalTime();
+            if (startDateToUniversalTime > endDateToUniversalTime)
+            {
+                throw new Exception("Start date cannot be greater than end date");
+            }
+            var conversations = _systemContext.Conversations.Where(c => c.Feedback == feedback && c.ConversationTime >= startDateToUniversalTime && c.ConversationTime <= endDateToUniversalTime).ToList();
+            return Task.FromResult(conversations);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        throw new NotImplementedException();
     }
     
    

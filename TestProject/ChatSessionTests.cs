@@ -16,7 +16,7 @@ public class ChatSessionTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new ChatSessionImplementation(context);
+        var service = new ChatSessionDAO(context);
         
         // Act
         var result = await service.StartChatSessionAsync();

@@ -18,15 +18,16 @@ public class ConversationController: ControllerBase
     
     [EnableCors]
     [HttpGet]
-    public async Task<ActionResult<Chat_session>> GetConversationByChatSessionId(int chatSessionId,string question)
+    public async Task<ActionResult<Chat_session>> GetConversationByChatSessionIdAsync(int chatSessionId,string question)
     {
         try
         {
-            return StatusCode(200,await _conversationInterface.GetConversationByChatSessionId(chatSessionId,question,10)); 
+            return StatusCode(200,await _conversationInterface.GetConversationByChatSessionIdAsync(chatSessionId,question,10)); 
         }
         catch (Exception e)
         {
             return   StatusCode(500, e.Message);
         }
     }
+   
 }

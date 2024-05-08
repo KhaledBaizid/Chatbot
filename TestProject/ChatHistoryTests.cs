@@ -13,7 +13,7 @@ public class ChatHistoryTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new ChatSessionImplementation(context);
+        var service = new ChatSessionDAO(context);
         
         // Act
         var exception = Assert.ThrowsAsync<Exception>(async () => 
@@ -35,7 +35,7 @@ public class ChatHistoryTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new ChatSessionImplementation(context);
+        var service = new ChatSessionDAO(context);
     
         // Create some mock chat sessions in the database
         var startDate = DateTime.Now.AddDays(-1);
