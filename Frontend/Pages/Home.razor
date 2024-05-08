@@ -1,12 +1,15 @@
 ﻿@page "/"
 @layout MainPageComponent
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager;
+@inject IChatSessionService ChatSessionService;
 @using System.Threading
 @using BlazorTypewriter
+@using Frontend.Services
 @using Microsoft.AspNetCore.Components.Authorization
 <AuthorizeView>
     <NotAuthorized>
- 
+
         <div class="mycontent">
             <div class="row">
                 <div class="leftside col-lg-5 col-md-5 col-sm-12">
@@ -26,6 +29,11 @@
         <div class="chat-button-container">
             <p class="chat-label">Chat </p>
 
+
+            <button class="chat-button" @onclick="() => StartChatSession()">
+                <i class="fas fa-comments"></i> <!-- This is the chat icon -->
+            </button>
+            @*
             <NavLink href="/ChatPage">
 
                 <button class="chat-button">
@@ -34,10 +42,10 @@
 
 
             </NavLink>
-
+            *@
 
         </div>
- 
+
     </NotAuthorized>
 
     <Authorized>
@@ -72,15 +80,9 @@
             <div class="chat-button-container">
                 <p class="chat-label">Chat </p>
 
-                <NavLink href="/ChatPage">
-
-                    <button class="chat-button">
-                        <i class="fas fa-comments"></i> <!-- This is the chat icon -->
-                    </button>
-
-
-                </NavLink>
-
+                    <button class="chat-button" @onclick="() => StartChatSession()">
+                                 <i class="fas fa-comments"></i> <!-- This is the chat icon -->
+                             </button>
 
             </div>
         }
@@ -107,6 +109,13 @@
             .DeleteAll(20)
             .Pause(2000)
             .Loop();
+    }
+
+    private async Task StartChatSession()
+    {
+       var response =await ChatSessionService.StartChatSessionAsync();
+       Console.WriteLine("response from start chat seesion: "+response);
+        NavigationManager.NavigateTo($"/ChatPage/{response}");
     }
 
 }

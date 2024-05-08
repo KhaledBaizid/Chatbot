@@ -1,7 +1,7 @@
 ﻿.chatPage {
 
     min-width: 375px;: rgb(0, 212, 255);
-    background: linear-gradient(90deg, rgba(0, 212, 255, 1) 8%, rgba(9, 9, 121, 1) 24%, rgba(2, 0, 36, 1) 100%);
+    /*background: linear-gradient(90deg, rgba(0, 212, 255, 1) 8%, rgba(9, 9, 121, 1) 24%, rgba(2, 0, 36, 1) 100%);*/
     height: 100vh;
     width: 100%;
     margin: 0px;
@@ -25,7 +25,7 @@
     
     padding: 20px;
 
-    background-color: blue;
+    /*background-color: blue;*/
 
 
 }
@@ -93,7 +93,7 @@ input {
   
 
  
-    direction: rtl; /* Start text and inline elements from the right */
+   
     text-align: right; /* Align text to the right */
     width: 100%;
 }
@@ -103,4 +103,9 @@ input {
     margin-left: 0px ;
     width: 100%;
     
+}
+
+.userIcon{
+    margin-top: 20px;
+    float: right;
 }
