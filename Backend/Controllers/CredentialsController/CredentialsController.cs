@@ -31,7 +31,7 @@ public class CredentialsController : ControllerBase
     // }
     
     [EnableCors]
-    [HttpPut]
+    [HttpPost]
    
     public async Task<ActionResult<string>> EditPasswordAsync(int id, string password, string newPassword, string reenteredPassword)
     {
@@ -46,7 +46,7 @@ public class CredentialsController : ControllerBase
     }
     
     [EnableCors]
-    [HttpPut]
+    [HttpPost]
     [Route("mail")]
     public async Task<ActionResult<string>> EditMailAsync(int id, string password, string newMail, string reenteredMail)
     {

@@ -1,6 +1,7 @@
 ﻿@page "/UploadFilePage"
 @using UploadFile.Models
 @using Frontend.Services
+@using Frontend.Services.UploadFileServices
 
 @inject IUploadFileService blobStorageService
 @inject SweetAlertService MySweetAlertService
@@ -41,7 +42,7 @@
             }
         </div>
         <div class="col-sm-2">
-            <button type="button" disabled="@fileLoading" class="btn btn-primary" @onclick="OnUploadSubmit">
+            <button type="button" disabled="@fileLoading" class="btn btn-primary btn-primary1" @onclick="OnUploadSubmit">
                 Upload File
             </button>
         </div>

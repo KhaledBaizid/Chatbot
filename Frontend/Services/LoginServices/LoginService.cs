@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Shared;
 
-namespace Frontend.Services;
+namespace Frontend.Services.LoginServices;
 
 public class LoginService : ILoginService
 {
@@ -18,7 +18,7 @@ public class LoginService : ILoginService
         string password = admin.Password;
 
 
-        var response = await httpClient.GetFromJsonAsync<Admin>($"/Login?mail={mail}&password={password}");
+        var response = await httpClient.GetFromJsonAsync<Admin>($"/Authentication?mail={mail}&password={password}");
         return response;
              
     }
