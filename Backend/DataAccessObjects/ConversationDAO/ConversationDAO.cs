@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using Backend.EFCData;
 using Backend.Services;
+using LangChain.Prompts;
+using LangChain.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Pgvector;
@@ -13,13 +15,13 @@ public class ConversationDAO : IConversationInterface
 {
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
-    private readonly IPromptProvider _promptProvider;
+    private readonly ILlmChainProvider _llmChainProvider;
 
-    public ConversationDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, IPromptProvider promptProvider)
+    public ConversationDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, ILlmChainProvider llmChainProvider)
     {
         _systemContext = systemContext;
         _embeddingProvider = embeddingProvider;
-        _promptProvider = promptProvider;
+        _llmChainProvider = llmChainProvider;
     }
 
     public  async Task<Chat_session> GetConversationByChatSessionIdAsync(int chatSessionId,string question,int timeOutSeconds)
@@ -27,6 +29,10 @@ public class ConversationDAO : IConversationInterface
         try
         { 
             var embeddingQuestion = await _embeddingProvider.GetModel().EmbedQueryAsync(question);
+          //   var input = new InputValues(new Dictionary<string, object>());
+          //   var output = new OutputValues(new Dictionary<string, object>());
+          // var n=  _llmChainProvider.GetMode().Memory.SaveContext(input ,output);
+          //   
             Vector embeddingVectorQuestion = new Vector(embeddingQuestion);
             //////////////////////////////////////////////////////////////
             string chunks = "";
@@ -41,7 +47,9 @@ public class ConversationDAO : IConversationInterface
             }
             else
             {  var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeOutSeconds));
-                var getAnswerTask = _promptProvider.GetModeLlmChain().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but not find out of context, and this the question: "+question); 
+               // string instruction
+                var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but find answer within the context, and this the question: "+question); 
+                Console.WriteLine(getAnswerTask.Result.Usage.Time.TotalSeconds);
               //  var promptAnswer= await _promptProvider.GetModeLlmChain().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but not find out of context, and this the question: "+question);
               
                 var completedTask = await Task.WhenAny(getAnswerTask , timeoutTask);

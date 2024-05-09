@@ -1,12 +1,13 @@
-﻿using Backend.EFCData;
+﻿using Backend.DataAccessObjects.AuthenticationDAO;
+using Backend.EFCData;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.DataAccessObjects.LoginDAO;
+namespace Backend.DataAccessObjects.AuthenticationDAO;
 
-public class LoginDAO : ILoginInterface
+public class AuthenticationDao : IAuthenticationInterface
 {
     private readonly DataContext _systemContext;
-    public LoginDAO(DataContext systemContext)
+    public AuthenticationDao(DataContext systemContext)
     {
         _systemContext = systemContext;
     }

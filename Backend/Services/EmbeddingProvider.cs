@@ -2,7 +2,7 @@
 
 namespace Backend.Services;
 
-public class EmbeddingProvide(string apiKey) : IEmbeddingProvider
+public class EmbeddingProvider(string apiKey) : IEmbeddingProvider
 {
     public Gpt35Turbo16KModel GetModel()
     {

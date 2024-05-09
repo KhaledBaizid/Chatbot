@@ -1,5 +1,5 @@
 ﻿using Backend.DataAccessObjects.Admin;
-using Backend.DataAccessObjects.LoginDAO;
+using Backend.DataAccessObjects.AuthenticationDAO;
 using Backend.EFCData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
