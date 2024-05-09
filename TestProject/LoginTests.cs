@@ -1,5 +1,5 @@
 ﻿using Backend.DataAccessObjects.Admin;
-using Backend.DataAccessObjects.LoginDAO;
+using Backend.DataAccessObjects.AuthenticationDAO;
 using Backend.EFCData;
 using Microsoft.Extensions.Configuration;
 using Shared;
@@ -17,7 +17,7 @@ public class LoginTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new LoginDAO(context);
+        var service = new AuthenticationDao(context);
     
             // Act
             var result = await service.GetLoginAdminIdAsync("test@test.com", "password");
@@ -37,7 +37,7 @@ public class LoginTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new LoginDAO(context);
+        var service = new AuthenticationDao(context);
     
         // Act
         var result = await service.GetLoginAdminIdAsync("test@test.com", "password1");
@@ -57,7 +57,7 @@ public class LoginTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new LoginDAO(context);
+        var service = new AuthenticationDao(context);
     
         // Act
         var result = await service.GetLoginAdminIdAsync("test1@test.com", "password");
@@ -76,7 +76,7 @@ public class LoginTests
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new LoginDAO(context);
+        var service = new AuthenticationDao(context);
     
         // Act
         var result = await service.GetLoginAdminIdAsync("test1@test.com", "password1");
@@ -95,7 +95,7 @@ public class LoginTests
         await context.Database.EnsureCreatedAsync();
         await context.Admins.AddAsync(new Admin {  Mail = "test@test.com", Password = "password" }); 
         await context.SaveChangesAsync();
-        var service = new LoginDAO(context);
+        var service = new AuthenticationDao(context);
     
         // Act
         var result = await service.GetLoginAdminIdAsync("", "");
