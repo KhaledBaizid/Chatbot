@@ -30,19 +30,19 @@ public class FeedbackController : ControllerBase
       }
    }
    
-   [EnableCors]
-   [HttpGet]
-   
-   public async Task<ActionResult<List<Conversation>>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
-   {
-      try
-      {
-         return StatusCode(200,await _feedBackInterface.GetConversationsByFeedbackAndByDateAsync(startDate,endDate,feedback)); 
-      }
-      catch (Exception e)
-      {
-         Console.WriteLine(e.Message);
-         return   StatusCode(500, e.Message);
-      }
-   }
+   // [EnableCors]
+   // [HttpGet]
+   //
+   // public async Task<ActionResult<List<Conversation>>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
+   // {
+   //    try
+   //    {
+   //       return StatusCode(200,await _feedBackInterface.GetConversationsByFeedbackAndByDateAsync(startDate,endDate,feedback)); 
+   //    }
+   //    catch (Exception e)
+   //    {
+   //       Console.WriteLine(e.Message);
+   //       return   StatusCode(500, e.Message);
+   //    }
+   // }
 }

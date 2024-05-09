@@ -1,4 +1,4 @@
-﻿using Backend.DataAccessObjects.LoginDAO;
+﻿using Backend.DataAccessObjects.AuthenticationDAO;
 using Backend.DataAccessObjects.PdfDAO;
 using Backend.EFCData;
 using Backend.Services;
@@ -18,7 +18,7 @@ public class PDFTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new PDFDAO(context,new EmbeddingProvide(apiKey),new PromptProvider(new EmbeddingProvide(apiKey)));
+        var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.pdf";
         // Act
         var result = await service.AddPDFAsync(url);
@@ -38,7 +38,7 @@ public class PDFTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new PDFDAO(context,new EmbeddingProvide(apiKey),new PromptProvider(new EmbeddingProvide(apiKey)));
+        var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.txt";
         // Act
         var result = await service.AddPDFAsync(url);
@@ -57,7 +57,7 @@ public class PDFTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new PDFDAO(context,new EmbeddingProvide(apiKey),new PromptProvider(new EmbeddingProvide(apiKey)));
+        var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide123.pdf";
         // Act
         var result = await service.AddPDFAsync(url);
@@ -78,7 +78,7 @@ public class PDFTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new PDFDAO(context,new EmbeddingProvide(apiKey),new PromptProvider(new EmbeddingProvide(apiKey)));
+        var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.pdf";
         await service.AddPDFAsync(url);
         // Act
@@ -98,7 +98,7 @@ public class PDFTests
         // Arrange
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
-        var service = new PDFDAO(context,new EmbeddingProvide(apiKey),new PromptProvider(new EmbeddingProvide(apiKey)));
+        var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.pdf";
         var notExistingUrl = "https://www.plainenglish.co.uk/files/formsguide1.pdf";
         await service.AddPDFAsync(url);

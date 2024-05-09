@@ -22,10 +22,26 @@ public class ConversationController: ControllerBase
     {
         try
         {
-            return StatusCode(200,await _conversationInterface.GetConversationByChatSessionIdAsync(chatSessionId,question,10)); 
+            return StatusCode(200,await _conversationInterface.GetConversationByChatSessionIdAsync(chatSessionId,question,30)); 
         }
         catch (Exception e)
         {
+            return   StatusCode(500, e.Message);
+        }
+    }
+    [EnableCors]
+    [HttpGet]
+    [Route("ByFeedbackAndByDate")]
+   
+    public async Task<ActionResult<List<Conversation>>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
+    {
+        try
+        {
+            return StatusCode(200,await _conversationInterface.GetConversationsByFeedbackAndByDateAsync(startDate,endDate,feedback)); 
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
             return   StatusCode(500, e.Message);
         }
     }

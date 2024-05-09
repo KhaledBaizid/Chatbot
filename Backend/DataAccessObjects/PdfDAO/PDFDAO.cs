@@ -17,20 +17,20 @@ public class PDFDAO : IPDFInterface
 {
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
-    private readonly IPromptProvider _promptProvider;
+  //  private readonly ILlmChainProvider _llmChainProvider;
 
-    public PDFDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, IPromptProvider promptProvider)
+    public PDFDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider)
     {
         _systemContext = systemContext;
         _embeddingProvider = embeddingProvider;
-        _promptProvider = promptProvider;
+       // _llmChainProvider = llmChainProvider;
     }
 
     public async Task<string> AddPDFAsync(string url)
     {
         try
         {
-            if (!UrlHasPdfExtension(url))
+            if (!IsUrlHasPdfExtension(url))
                 return "The url does not have a pdf extension, please provide a valid pdf url with valid extension";
             //////////////////////
             using (var client = new HttpClient())
@@ -117,7 +117,7 @@ public class PDFDAO : IPDFInterface
         
     }
 
-    public bool UrlHasPdfExtension(string url)
+    public bool IsUrlHasPdfExtension(string url)
     {
         if (url.Length >= 4)
         {
