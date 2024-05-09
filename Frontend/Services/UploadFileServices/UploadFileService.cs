@@ -1,9 +1,8 @@
-﻿using System.Net.Http.Json;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using UploadFile.Models;
 
-namespace Frontend.Services;
+namespace Frontend.Services.UploadFileServices;
 
 public class UploadFileService : IUploadFileService
 {

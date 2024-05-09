@@ -19,6 +19,9 @@
     margin: auto; /* Center the container */
     justify-content: center;
     align-items: center;
+    box-shadow: 0 0 33px rgba(0, 0, 0, 1);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 .chat-container {
 
@@ -108,4 +111,14 @@ input {
 .userIcon{
     margin-top: 20px;
     float: right;
+}
+.feedback{
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
+}
+.likeDislikeButtons{
+    width: 100px !important;
+    margin: 10px !important;;
+    height: 50px !important;;
 }

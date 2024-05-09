@@ -1,6 +1,6 @@
 ﻿using UploadFile.Models;
 
-namespace Frontend.Services;
+namespace Frontend.Services.UploadFileServices;
 
 public interface IUploadFileService
 {

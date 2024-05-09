@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace Frontend.Services;
+namespace Frontend.Services.CredentalServices;
 
 public class CredentialService : ICredentialService
 {

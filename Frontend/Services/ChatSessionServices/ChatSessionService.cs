@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Shared;
 
-namespace Frontend.Services;
+namespace Frontend.Services.ChatSessionServices;
 
 public class ChatSessionService :   IChatSessionService
 {

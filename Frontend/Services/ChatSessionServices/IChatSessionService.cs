@@ -1,6 +1,6 @@
 ﻿using Shared;
 
-namespace Frontend.Services;
+namespace Frontend.Services.ChatSessionServices;
 
 public interface IChatSessionService
 {
