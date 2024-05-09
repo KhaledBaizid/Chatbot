@@ -1,7 +1,8 @@
 ﻿using System.Net.Http.Json;
+using Frontend.Services.LoginServices;
 using Shared;
 
-namespace Frontend.Services.LoginServices;
+namespace Frontend.Services;
 
 public class LoginService : ILoginService
 {
