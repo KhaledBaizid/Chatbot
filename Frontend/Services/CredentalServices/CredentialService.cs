@@ -30,4 +30,22 @@ public class CredentialService : ICredentialService
             return errorContent;
         }
     }
+
+    public async Task<string?> ChangeMail(int id, string password, string newMail, string repeatNewMail)
+    {
+        var endpointUrl = $"{httpClient.BaseAddress}Credentials/mail?id={id}&password={password}&newMail={newMail}&reenteredMail={repeatNewMail}";
+
+        var response = await httpClient.PostAsJsonAsync(endpointUrl, new { });
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return responseContent;
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            return errorContent;
+        }
+    }
 }

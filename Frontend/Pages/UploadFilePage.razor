@@ -6,8 +6,14 @@
 @inject IUploadFileService blobStorageService
 @inject SweetAlertService MySweetAlertService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Authorization
 
-<style>
+
+<AuthorizeView>
+    <Authorized>
+  
+
+    <style>
     
    body{
         
@@ -17,37 +23,42 @@
   
     
 </style>
-
-
-<div class="root">
-
-
-    @if (warninngMessage.Length > 0)
-    {
-        <div class="alert alert-warning">
-            <strong>Warning!</strong> @warninngMessage.
-        </div>
-    }
-
-
-    <div class="row divWidth">
-        <div class="col-sm-4">
-            <label>
-                <InputFile class="form-control" disabled="@fileLoading" OnChange="@OnInputFileChange" single/>
-            </label>
-            @if (fileLoading)
+@*
+       @if (IsLoading)
             {
-                <i class="fa fa-refresh"></i>
-                <span>Loading...</span>
+                <div class="spinner"></div>
             }
+
+*@
+    <div class="root">
+
+
+        @if (warninngMessage.Length > 0)
+        {
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> @warninngMessage.
+            </div>
+        }
+
+
+        <div class="row divWidth">
+            <div class="col-sm-4">
+                <label>
+                    <InputFile class="form-control" disabled="@fileLoading" OnChange="@OnInputFileChange" single/>
+                </label>
+                @* @if (fileLoading) *@
+                @* { *@
+                @*     <i class="fa fa-refresh"></i> *@
+                @*     <span>Loading...</span> *@
+                @* } *@
+            </div>
+            <div class="col-sm-2">
+                <button type="button" disabled="@fileLoading" class="btn btn-primary btn-primary1" @onclick="OnUploadSubmit">
+                    Upload File
+                </button>
+            </div>
         </div>
-        <div class="col-sm-2">
-            <button type="button" disabled="@fileLoading" class="btn btn-primary btn-primary1" @onclick="OnUploadSubmit">
-                Upload File
-            </button>
-        </div>
-    </div>
-    @*
+        @*
     @if (displayMessage.Length > 0)
     {
         <div class="alert alert-success">
@@ -55,49 +66,52 @@
         </div>
     }
     *@
-    <br/>
-    <div class="row divWidth">
-        @if (fileUploadViewModels.Count > 0)
-        {
-            <table class="table table-responsive table-bordered">
-                <thead class="text-primary">
-                <tr>
-                    <th>File</th>
-                    <th class="action">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var attachment in fileUploadViewModels)
-                {
+        <br/>
+        <div class="row divWidth">
+            @if (fileUploadViewModels.Count > 0)
+            {
+                <table class="table table-responsive table-bordered">
+                    <thead class="text-primary">
                     <tr>
-                        <td>
-                            <a class="text-primary" href="@attachment.FileStorageUrl" target="_blank">
-                                <i class="fa-solid fa-paperclip"></i> @attachment.FileName
-                            </a>
-
-                        </td>
-
-                        <td>
-                            <span class="oi oi-delete" aria-hidden="true" @onclick="() => OnFileDeleteClick(attachment)"></span>
-                        </td>
+                        <th>File</th>
+                        <th class="action">Action</th>
                     </tr>
-                }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="alert alert-info">
-                <strong>No Files!</strong>
-            </div>
-        }
+                    </thead>
+                    <tbody>
+                    @foreach (var attachment in fileUploadViewModels)
+                    {
+                        <tr>
+                            <td>
+                                <a class="text-primary" href="@attachment.FileStorageUrl" target="_blank">
+                                    <i class="fa-solid fa-paperclip"></i> @attachment.FileName
+                                </a>
+
+                            </td>
+
+                            <td>
+                                <span class="oi oi-delete" aria-hidden="true" @onclick="() => OnFileDeleteClick(attachment)"></span>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <strong>No Files!</strong>
+                </div>
+            }
+        </div>
+
+
     </div>
-
-
-</div>
-
+         </Authorized>
+</AuthorizeView>
 
 @code {
+    //private bool IsLoading = false;
+    
     private string warninngMessage = "";
     private string displayMessage = "";
     private List<IBrowserFile> loadedFiles = new();
@@ -124,11 +138,14 @@
 
     private async void OnUploadSubmit()
     {
+       
         fileLoading = true;
         foreach (var file in selectedFiles)
         {
             try
             {
+            //    IsLoading = true;
+            ShowSweetAlertLoading(true);
                 var trustedFileNameForFileStorage = RemoveSpacesBetweenWords(file.Name);
                 var blobUrl = await blobStorageService.UploadFileToBlobAsync(trustedFileNameForFileStorage, file.ContentType, file.OpenReadStream(20971520));
                 var response = await blobStorageService.SendFileUrl(blobUrl,1);
@@ -176,7 +193,10 @@
                 
 
                 await OnInitializedAsync();
+              //  IsLoading = false;
+              ShowSweetAlertLoading(false);
             }
+            
             catch (Exception ex)
             {
                 warninngMessage = "File Upload failed, Please try again!!";
@@ -197,6 +217,8 @@
     {
         try
         {
+          //  IsLoading = true;
+          ShowSweetAlertLoading(true);
             var deleteResponse = await blobStorageService.DeleteFileToBlobAsync(attachment.FileName);
             var response = await blobStorageService.DeleteFileUrl(attachment.FileStorageUrl);
             if (deleteResponse)
@@ -210,8 +232,11 @@
                     await ShowAlert("Your file has been deleted",true);
                 }
             }
+            ShowSweetAlertLoading(false);
+        //    IsLoading = false;
 
             await OnInitializedAsync();
+          
         }
         catch (Exception)
         {
@@ -248,6 +273,40 @@
         }
         
        
+    }
+    
+    
+    
+    private void ShowSweetAlertLoading(bool show)
+    {
+        if (show)
+        {
+            void WillOpenHandler()
+            {
+                MySweetAlertService.ShowLoadingAsync();
+            }
+
+            // Convert the method to a delegate with the same signature as SweetAlertCallback
+            SweetAlertCallback willOpenCallback = new SweetAlertCallback(WillOpenHandler);
+
+            MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                
+              //  Background = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                Color = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                IconColor = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                
+                Title = "Please Wait To Upload Your File!",
+                Html = "Processing..",
+                AllowOutsideClick = false,
+                ShowConfirmButton = false,
+                WillOpen = willOpenCallback
+            });
+        }
+        else
+        {
+            MySweetAlertService.CloseAsync();
+        }
     }
 
 

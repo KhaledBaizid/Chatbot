@@ -82,7 +82,7 @@
     --bs-gutter-x: 0px;
 }
 
-.parent{
+.parent {
     height: 90vh;
     width: 100%;
     display: flex; /* Make this a flex container */
@@ -93,13 +93,39 @@
 .myimg {
     max-width: 100%;
     max-height: 80vh; /* This will ensure the image height does not exceed the viewport height */
-   
-      box-shadow: 0 0 33px rgba(0, 0, 0, 1);
-   
+
+    box-shadow: 0 0 33px rgba(0, 0, 0, 1);
+
 }
+
 .responsive-image {
     max-width: 100%;
     max-height: 100vh; /* This will ensure the image height does not exceed the viewport height */
     height: auto;
 
+}
+
+.spinner {
+    border: 16px solid silver;
+    border-top: 16px solid #337AB7;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: spin 700ms linear infinite;
+    top: 50%;
+    left: 40%;
+
+    position: fixed;
+
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
