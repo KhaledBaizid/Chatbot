@@ -150,9 +150,30 @@
 
 
                 if (response == "pdf is added successfully")
+
+                    await ShowAlert(response,true);
+
+                else
                 {
-                    await ShowAlert("Your file has been saved");
+                    try
+                    {
+                        var deleteResponse = await blobStorageService.DeleteFileToBlobAsync(trustedFileNameForFileStorage);
+                        var response1 = await blobStorageService.DeleteFileUrl(blobUrl);
+                        if (deleteResponse)
+                        {
+                            await ShowAlert(response, false);
+                        }
+
+                        await OnInitializedAsync();
+                    }
+                    catch (Exception)
+                    {
+                        warninngMessage = "Something went wrong! Please try again.";
+                    }
+                   
                 }
+                 
+                
 
                 await OnInitializedAsync();
             }
@@ -163,7 +184,7 @@
         }
 
         fileLoading = false;
-        this.StateHasChanged();
+        StateHasChanged();
     }
 
     private string RemoveSpacesBetweenWords(string input)
@@ -186,7 +207,7 @@
 
                 if (response == "pdf is deleted successfully")
                 {
-                    await ShowAlert("Your file has been deleted");
+                    await ShowAlert("Your file has been deleted",true);
                 }
             }
 
@@ -201,16 +222,32 @@
     }
 
 
-    public async Task ShowAlert(string msg)
+    public async Task ShowAlert(string msg,  bool successMessage)
     {
-        await MySweetAlertService.FireAsync(new SweetAlertOptions
+        if (successMessage)
         {
-            Position = SweetAlertPosition.Center,
-            Icon = SweetAlertIcon.Success,
-            Title = "Your file has been saved",
-            ShowConfirmButton = false,
-            Timer = 2000
-        });
+            await MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Position = SweetAlertPosition.Center,
+                Icon = SweetAlertIcon.Success,
+                Title = msg,
+                ShowConfirmButton = false,
+                Timer = 2000
+            }); 
+        }
+        else
+        {
+            await MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Position = SweetAlertPosition.Center,
+                Icon = SweetAlertIcon.Error,
+                Title = msg,
+                ShowConfirmButton = false,
+                Timer = 4000
+            });
+        }
+        
+       
     }
 
 
