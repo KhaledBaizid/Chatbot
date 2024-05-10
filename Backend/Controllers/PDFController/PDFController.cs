@@ -14,7 +14,6 @@ public class PDFController : ControllerBase
         _pdfInterface = pdfInterface;
     }
     
-    
     [EnableCors] 
     [HttpPost]
     public async Task<ActionResult<string>> AddPDFAsync(string url, int adminId)
@@ -27,8 +26,6 @@ public class PDFController : ControllerBase
         {
             return   StatusCode(500, e.Message);
         }
-      
-      
     }
     
     [EnableCors]

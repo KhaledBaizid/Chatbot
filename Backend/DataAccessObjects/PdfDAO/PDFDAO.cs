@@ -42,7 +42,8 @@ public class PDFDAO : IPDFInterface
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Please try again later");
+            
         }
        
     }
