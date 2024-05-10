@@ -8,6 +8,6 @@ public interface IUploadFileService
     public Task<bool> DeleteFileToBlobAsync(string strFileName);
     public Task<List<FileUploadViewModel>> GetAllFilesFromBlobAsync();
 
-    public Task<string> SendFileUrl(string fileUrl);
+    public Task<string> SendFileUrl(string fileUrl,int adminId);
     public Task<string> DeleteFileUrl(string fileUrl);
 }

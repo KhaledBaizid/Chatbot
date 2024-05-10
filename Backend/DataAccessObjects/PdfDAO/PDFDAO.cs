@@ -26,62 +26,28 @@ public class PDFDAO : IPDFInterface
        // _llmChainProvider = llmChainProvider;
     }
 
-    public async Task<string> AddPDFAsync(string url)
+    public async Task<string> AddPDFAsync(string url, int adminId)
     {
         try
-        {
+        {    
+            // Check if the URL has a PDF extension
             if (!IsUrlHasPdfExtension(url))
                 return "The url does not have a pdf extension, please provide a valid pdf url with valid extension";
-            //////////////////////
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                   return ("url is not valid");
-                }
-
-                var bytes = await response.Content.ReadAsStreamAsync();
-                //////////////  
-                using PdfDocument document = PdfDocument.Open(bytes);
-                await _systemContext.PDFs.AddAsync(new PDF { AdminId = 1, Url = url });
-                await _systemContext.SaveChangesAsync();
-                var pdfFound = await _systemContext.PDFs.FirstAsync(p => p.Url == url);
-                var pdfId = pdfFound.Id;
-                int pageCount = document.NumberOfPages;
-
-                for (int i = 1; i <= pageCount; i++)
-                {
-                    Page page = document.GetPage(i);
-                    string text = "";
-                    text = page.Text;
-                  
-                    var r_splitter = new RecursiveCharacterTextSplitter(["\n\n", "\n", " ", ""], 1000, 80);
-                    var spl = r_splitter.SplitText(text);
-
-                    foreach (var splitText in spl)
-                    {
-                        var v = await _embeddingProvider.GetModel().EmbedQueryAsync(splitText);
-                        var chunk = new Chunks
-                        {
-                            PDFId = pdfId,
-                            Embedding = new Vector(v),
-                            Text = splitText
-                        };
-                        await _systemContext.Chunks.AddAsync(chunk);
-                        await _systemContext.SaveChangesAsync();
-                    }
-                }
-
-                return "pdf is added successfully";
-            }
+           
+            using var client = new HttpClient();
+            var response = await client.GetAsync(url);
+            // check if the URL is valid      
+            if (!response.IsSuccessStatusCode)
+                return ("url is not valid");
+            // save the pdf in the database
+            return await ProcessPdfAsunc(response, url, adminId);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-        throw new NotImplementedException();
+       
     }
 
     public async  Task<bool> IsPDFExistAsync(string url)
@@ -129,5 +95,51 @@ public class PDFDAO : IPDFInterface
         }
     
         return false;
+    }
+
+    public async Task<string> ProcessPdfAsunc(HttpResponseMessage response, string url, int adminId )
+    {
+        try
+        {
+            var bytes = await response.Content.ReadAsStreamAsync();
+            //////////////  
+            using PdfDocument document = PdfDocument.Open(bytes);
+            await _systemContext.PDFs.AddAsync(new PDF { AdminId = adminId , Url = url });
+            await _systemContext.SaveChangesAsync();
+            var pdfFound = await _systemContext.PDFs.FirstAsync(p => p.Url == url);
+            var pdfId = pdfFound.Id;
+            int pageCount = document.NumberOfPages;
+
+            for (int i = 1; i <= pageCount; i++)
+            {
+                Page page = document.GetPage(i);
+                string text = "";
+                text = page.Text;
+                  
+                var r_splitter = new RecursiveCharacterTextSplitter(["\n\n", "\n", " ", ""], 1000, 80);
+                var spl = r_splitter.SplitText(text);
+
+                foreach (var splitText in spl)
+                {
+                    var v = await _embeddingProvider.GetModel().EmbedQueryAsync(splitText);
+                    var chunk = new Chunks
+                    {
+                        PDFId = pdfId,
+                        Embedding = new Vector(v),
+                        Text = splitText
+                    };
+                    await _systemContext.Chunks.AddAsync(chunk);
+                    await _systemContext.SaveChangesAsync();
+                }
+            }
+
+            return "pdf is added successfully";
+        }
+        catch (Exception e)
+        {
+            return "Something went wrong while processing the pdf. Please try again later.";
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

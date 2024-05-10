@@ -131,7 +131,7 @@
             {
                 var trustedFileNameForFileStorage = RemoveSpacesBetweenWords(file.Name);
                 var blobUrl = await blobStorageService.UploadFileToBlobAsync(trustedFileNameForFileStorage, file.ContentType, file.OpenReadStream(20971520));
-                var response = await blobStorageService.SendFileUrl(blobUrl);
+                var response = await blobStorageService.SendFileUrl(blobUrl,1);
                 if (blobUrl != null)
                 {
                     FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()

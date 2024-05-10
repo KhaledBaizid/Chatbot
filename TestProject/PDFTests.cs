@@ -1,4 +1,5 @@
-﻿using Backend.DataAccessObjects.AuthenticationDAO;
+﻿using Backend.DataAccessObjects.Admin;
+using Backend.DataAccessObjects.AuthenticationDAO;
 using Backend.DataAccessObjects.PdfDAO;
 using Backend.EFCData;
 using Backend.Services;
@@ -19,9 +20,19 @@ public class PDFTests
         var context = new DataContext(new ConfigurationBuilder().Build(), useInMemoryDatabase: true);
         await context.Database.EnsureCreatedAsync();
         var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
+       
         var url = "https://www.plainenglish.co.uk/files/formsguide.pdf";
+        
+        var adminService = new CredentialsDAO(context);
+        var admin = new Admin
+        {
+            Mail = "khaled@chatbot.com",
+            Password = "123456"
+        };
+        await adminService.CreateAdminAccountAsync(admin);
+        await context.SaveChangesAsync();
         // Act
-        var result = await service.AddPDFAsync(url);
+        var result = await service.AddPDFAsync(url,1);
         var isAdded = await service.IsPDFExistAsync(url);
         
         // Assert
@@ -40,8 +51,17 @@ public class PDFTests
         await context.Database.EnsureCreatedAsync();
         var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.txt";
+        
+        var adminService = new CredentialsDAO(context);
+        var admin = new Admin
+        {
+            Mail = "khaled@chatbot.com",
+            Password = "123456"
+        };
+        await adminService.CreateAdminAccountAsync(admin);
+        await context.SaveChangesAsync();
         // Act
-        var result = await service.AddPDFAsync(url);
+        var result = await service.AddPDFAsync(url,1);
         var isAdded = await service.IsPDFExistAsync(url);
         // Assert
         Assert.That(isAdded,Is.False);
@@ -59,8 +79,17 @@ public class PDFTests
         await context.Database.EnsureCreatedAsync();
         var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide123.pdf";
+        
+        var adminService = new CredentialsDAO(context);
+        var admin = new Admin
+        {
+            Mail = "khaled@chatbot.com",
+            Password = "123456"
+        };
+        await adminService.CreateAdminAccountAsync(admin);
+        await context.SaveChangesAsync();
         // Act
-        var result = await service.AddPDFAsync(url);
+        var result = await service.AddPDFAsync(url,1);
         var isAdded = await service.IsPDFExistAsync(url);
         
         // Assert
@@ -80,7 +109,15 @@ public class PDFTests
         await context.Database.EnsureCreatedAsync();
         var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.pdf";
-        await service.AddPDFAsync(url);
+        var adminService = new CredentialsDAO(context);
+        var admin = new Admin
+        {
+            Mail = "khaled@chatbot.com",
+            Password = "123456"
+        };
+        await adminService.CreateAdminAccountAsync(admin);
+        await context.SaveChangesAsync();
+        await service.AddPDFAsync(url,1);
         // Act
      var  result = await service.DeletePDFAsync(url);
         var isExisting = await service.IsPDFExistAsync(url);;
@@ -101,7 +138,16 @@ public class PDFTests
         var service = new PDFDAO(context,new EmbeddingProvider(apiKey));
         var url = "https://www.plainenglish.co.uk/files/formsguide.pdf";
         var notExistingUrl = "https://www.plainenglish.co.uk/files/formsguide1.pdf";
-        await service.AddPDFAsync(url);
+        
+        var adminService = new CredentialsDAO(context);
+        var admin = new Admin
+        {
+            Mail = "khaled@chatbot.com",
+            Password = "123456"
+        };
+        await adminService.CreateAdminAccountAsync(admin);
+        await context.SaveChangesAsync();
+        await service.AddPDFAsync(url,1);
         // Act
         var  result = await service.DeletePDFAsync(notExistingUrl);
         var isExisting = await service.IsPDFExistAsync(url);;
