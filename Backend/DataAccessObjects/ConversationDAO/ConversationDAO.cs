@@ -29,28 +29,29 @@ public class ConversationDAO : IConversationInterface
     {
         try
         { 
+            // get the embedding of the question
             var embeddingQuestion = await _embeddingProvider.GetModel().EmbedQueryAsync(question);
-          //   var input = new InputValues(new Dictionary<string, object>());
-          //   var output = new OutputValues(new Dictionary<string, object>());
-          // var n=  _llmChainProvider.GetMode().Memory.SaveContext(input ,output);
-          //   
+         
             Vector embeddingVectorQuestion = new Vector(embeddingQuestion);
-            //////////////////////////////////////////////////////////////
-            string chunks = "";
            
-            chunks =  await GetChunksByVector(embeddingVectorQuestion);
+            string Context = "";
+           
+            // find the context of the question by calling the GetChunksByVector method to get the chunks that are similar to the question
+            Context =  await GetChunksByVector(embeddingVectorQuestion);
+            
             string answer = "";
             
-            if (chunks.Equals("") )
+            if (Context.Equals("") )
             {
                 answer = "I am sorry, i can not find the answer to your question.";
               
             }
             else
             {  var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeOutSeconds));
-               // string instruction
-              
-                var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but find answer within the context, and this the question: "+question); 
+               
+              // use llmChain provider to generate the answer
+                var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(Context+" "+question); 
+               
                 Console.WriteLine(getAnswerTask.Result.Usage.Time.TotalSeconds);
               
               //  var promptAnswer= await _promptProvider.GetModeLlmChain().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but not find out of context, and this the question: "+question);
@@ -62,32 +63,12 @@ public class ConversationDAO : IConversationInterface
                     // Save changes completed within the timeout
                     await getAnswerTask;
                     answer = getAnswerTask.Result.ToString();
-                    //////
-                  var m= new  ConversationBufferMemory(new ChatMessageHistory());
-                 
-                 var n= m.ChatHistory.AddMessage(getAnswerTask.Result.Messages.First());
-                 l.Add(m.ChatHistory.Messages.First().ToString());
-                 foreach (var i in l)
-                 {
-                     Console.WriteLine(i.ToString()); 
-                 }
-                  
-                 // Console.WriteLine(m.ChatHistory.Messages.First().ToString());
-                //     var input = new InputValues(new Dictionary<string, object>());
-                //    input.Value.Add(question,question);
-                //     var output = new OutputValues(new Dictionary<string, object>());
-                //     output.Value.Add(answer,answer);
-                // var c=    _llmChainProvider.GetMode().Memory.SaveContext(input, output);
-                // Console.WriteLine(c.AsyncState.ToString());
-                    /// console
                 }
                 else
                 {
                     // Timeout occurred
                     answer = "Getting answer took too long. Please try to ask again.";
                 }
-               
-              //  answer = promptAnswer.ToString();
               
             }
               
@@ -114,9 +95,10 @@ public class ConversationDAO : IConversationInterface
         }
         throw new NotImplementedException();
     }
-    
-    public async Task<string> GetChunksByVector(Vector vector)
-    { string chunksText = "";
+
+    private async Task<string> GetChunksByVector(Vector vector)
+    { 
+        string chunksText = "";
        
             var chunks = await _systemContext.Chunks
                 .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
@@ -125,7 +107,7 @@ public class ConversationDAO : IConversationInterface
                 .Take(10)
                 .ToListAsync();
             foreach (var chunk in chunks)
-            {  Console.WriteLine(chunk.Distance);
+            {  
                 chunksText += chunk.Entity.Text+" ";
             }
         return chunksText;
