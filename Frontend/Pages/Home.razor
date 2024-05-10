@@ -8,14 +8,15 @@
 @using Frontend.Services
 @using Frontend.Services.ChatSessionServices
 @using Microsoft.AspNetCore.Components.Authorization
+@inject SweetAlertService MySweetAlertService
 <AuthorizeView>
     <NotAuthorized>
-
+        @*
         @if (IsLoading)
         {
             <div class="spinner"></div>
         }
-
+        *@
         <div class="mycontent">
             <div class="row">
                 <div class="leftside col-lg-5 col-md-5 col-sm-12">
@@ -91,7 +92,7 @@
 
     private TypewriterBuilder typewriter;
 
-    private bool IsLoading = false;
+    // private bool IsLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,11 +112,45 @@
 
     private async Task StartChatSession()
     {
-        IsLoading = true;
+        //  IsLoading = true; //here SweetAlertLoading turns to true
+        ShowSweetAlertLoading(true); // Show loading alert
         var response = await ChatSessionService.StartChatSessionAsync();
         Console.WriteLine("response from start chat seesion: " + response);
+        ShowSweetAlertLoading(false); // Hide loading alert
         NavigationManager.NavigateTo($"/ChatPage/{response}");
-        IsLoading = false;
+
+        //IsLoading = false;  //here SweetAlertLoading turns to false 
     }
+
+
+    private void ShowSweetAlertLoading(bool show)
+    {
+        if (show)
+        {
+            void WillOpenHandler()
+            {
+                MySweetAlertService.ShowLoadingAsync();
+            }
+
+            // Convert the method to a delegate with the same signature as SweetAlertCallback
+            SweetAlertCallback willOpenCallback = new SweetAlertCallback(WillOpenHandler);
+
+            MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Color = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                IconColor = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                Title = "Please Wait The Session Will Start!",
+                Html = "Processing..",
+                AllowOutsideClick = false,
+                ShowConfirmButton = false,
+                WillOpen = willOpenCallback
+            });
+        }
+        else
+        {
+            MySweetAlertService.CloseAsync();
+        }
+    }
+
 
 }

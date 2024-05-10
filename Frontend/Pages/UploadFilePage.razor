@@ -23,13 +23,13 @@
   
     
 </style>
-
+@*
        @if (IsLoading)
             {
                 <div class="spinner"></div>
             }
 
-
+*@
     <div class="root">
 
 
@@ -110,7 +110,7 @@
 </AuthorizeView>
 
 @code {
-    private bool IsLoading = false;
+    //private bool IsLoading = false;
     
     private string warninngMessage = "";
     private string displayMessage = "";
@@ -144,7 +144,8 @@
         {
             try
             {
-                IsLoading = true;
+            //    IsLoading = true;
+            ShowSweetAlertLoading(true);
                 var trustedFileNameForFileStorage = RemoveSpacesBetweenWords(file.Name);
                 var blobUrl = await blobStorageService.UploadFileToBlobAsync(trustedFileNameForFileStorage, file.ContentType, file.OpenReadStream(20971520));
                 var response = await blobStorageService.SendFileUrl(blobUrl,1);
@@ -192,7 +193,8 @@
                 
 
                 await OnInitializedAsync();
-                IsLoading = false;
+              //  IsLoading = false;
+              ShowSweetAlertLoading(false);
             }
             
             catch (Exception ex)
@@ -215,7 +217,8 @@
     {
         try
         {
-            IsLoading = true;
+          //  IsLoading = true;
+          ShowSweetAlertLoading(true);
             var deleteResponse = await blobStorageService.DeleteFileToBlobAsync(attachment.FileName);
             var response = await blobStorageService.DeleteFileUrl(attachment.FileStorageUrl);
             if (deleteResponse)
@@ -229,7 +232,8 @@
                     await ShowAlert("Your file has been deleted",true);
                 }
             }
-            IsLoading = false;
+            ShowSweetAlertLoading(false);
+        //    IsLoading = false;
 
             await OnInitializedAsync();
           
@@ -269,6 +273,40 @@
         }
         
        
+    }
+    
+    
+    
+    private void ShowSweetAlertLoading(bool show)
+    {
+        if (show)
+        {
+            void WillOpenHandler()
+            {
+                MySweetAlertService.ShowLoadingAsync();
+            }
+
+            // Convert the method to a delegate with the same signature as SweetAlertCallback
+            SweetAlertCallback willOpenCallback = new SweetAlertCallback(WillOpenHandler);
+
+            MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                
+              //  Background = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                Color = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                IconColor = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                
+                Title = "Please Wait To Upload Your File!",
+                Html = "Processing..",
+                AllowOutsideClick = false,
+                ShowConfirmButton = false,
+                WillOpen = willOpenCallback
+            });
+        }
+        else
+        {
+            MySweetAlertService.CloseAsync();
+        }
     }
 
 
