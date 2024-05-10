@@ -11,6 +11,11 @@
 <AuthorizeView>
     <NotAuthorized>
 
+        @if (IsLoading)
+        {
+            <div class="spinner"></div>
+        }
+
         <div class="mycontent">
             <div class="row">
                 <div class="leftside col-lg-5 col-md-5 col-sm-12">
@@ -34,16 +39,7 @@
             <button class="chat-button" @onclick="() => StartChatSession()">
                 <i class="fas fa-comments"></i> <!-- This is the chat icon -->
             </button>
-            @*
-            <NavLink href="/ChatPage">
 
-                <button class="chat-button">
-                    <i class="fas fa-comments"></i> <!-- This is the chat icon -->
-                </button>
-
-
-            </NavLink>
-            *@
 
         </div>
 
@@ -81,9 +77,9 @@
             <div class="chat-button-container">
                 <p class="chat-label">Chat </p>
 
-                    <button class="chat-button" @onclick="() => StartChatSession()">
-                                 <i class="fas fa-comments"></i> <!-- This is the chat icon -->
-                             </button>
+                <button class="chat-button" @onclick="() => StartChatSession()">
+                    <i class="fas fa-comments"></i> <!-- This is the chat icon -->
+                </button>
 
             </div>
         }
@@ -95,6 +91,7 @@
 
     private TypewriterBuilder typewriter;
 
+    private bool IsLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,9 +111,11 @@
 
     private async Task StartChatSession()
     {
-       var response =await ChatSessionService.StartChatSessionAsync();
-       Console.WriteLine("response from start chat seesion: "+response);
+        IsLoading = true;
+        var response = await ChatSessionService.StartChatSessionAsync();
+        Console.WriteLine("response from start chat seesion: " + response);
         NavigationManager.NavigateTo($"/ChatPage/{response}");
+        IsLoading = false;
     }
 
 }
