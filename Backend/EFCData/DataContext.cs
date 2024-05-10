@@ -65,7 +65,8 @@ public class DataContext : DbContext
         modelBuilder.Entity<Chunks>()
             .HasIndex(i => i.Embedding)
             .HasMethod("ivfflat")
-            .HasOperators("vector_l2_ops");
+            .HasOperators("vector_cosine_ops");
+        
         
       
  ////////////////////////////////       
