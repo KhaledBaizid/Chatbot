@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using System.Net.Http.Json;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using UploadFile.Models;
 
@@ -109,9 +110,21 @@ public class UploadFileService : IUploadFileService
     }
 
     public async Task<string> SendFileUrl(string fileUrl,int adminId)
-    {
-        var response = await httpClient.GetStringAsync($"/PDF?url={fileUrl}&adminId={adminId}");
-        return response;
+    {  
+        var endpointUrl = $"{httpClient.BaseAddress}PDF/?url={fileUrl}&adminId={adminId}";
+        var response = await httpClient.PostAsJsonAsync(endpointUrl, new { });
+      //  var response = await httpClient.GetStringAsync($"/PDF?url={fileUrl}&adminId={adminId}");
+      if (response.IsSuccessStatusCode)
+      {
+          var responseContent = await response.Content.ReadAsStringAsync();
+          return responseContent;
+      }
+      else
+      {
+          var errorContent = await response.Content.ReadAsStringAsync();
+          return errorContent;
+      }
+       // return response;
     }
 
     public async Task<string> DeleteFileUrl(string fileUrl)
