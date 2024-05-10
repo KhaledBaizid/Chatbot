@@ -16,7 +16,7 @@ public class PDFController : ControllerBase
     
     
     [EnableCors] 
-    [HttpGet]
+    [HttpPost]
     public async Task<ActionResult<string>> AddPDFAsync(string url, int adminId)
     {
         try
