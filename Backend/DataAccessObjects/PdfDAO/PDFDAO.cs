@@ -17,13 +17,10 @@ public class PDFDAO : IPDFInterface
 {
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
-  //  private readonly ILlmChainProvider _llmChainProvider;
-
     public PDFDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider)
     {
         _systemContext = systemContext;
         _embeddingProvider = embeddingProvider;
-       // _llmChainProvider = llmChainProvider;
     }
 
     public async Task<string> AddPDFAsync(string url, int adminId)
@@ -40,7 +37,7 @@ public class PDFDAO : IPDFInterface
             if (!response.IsSuccessStatusCode)
                 return ("url is not valid");
             // save the pdf in the database
-            return await ProcessPdfAsunc(response, url, adminId);
+            return await ProcessPdfAsync(response, url, adminId);
         }
         catch (Exception e)
         {
@@ -53,13 +50,7 @@ public class PDFDAO : IPDFInterface
     public async  Task<bool> IsPDFExistAsync(string url)
     {
         var isExisting = await _systemContext.PDFs.FirstOrDefaultAsync(p => p.Url == url);
-        if(isExisting != null)
-        {
-            return true;
-        }
-
-        return false;
-
+        return isExisting != null;
     }
 
     public async Task<string> DeletePDFAsync(string url)
@@ -67,13 +58,10 @@ public class PDFDAO : IPDFInterface
         try
         {
             var pdf = await _systemContext.PDFs.FirstOrDefaultAsync(p => p.Url == url);
-            if (pdf != null)
-            {
-                _systemContext.PDFs.Remove(pdf);
-                await _systemContext.SaveChangesAsync();
-                return "pdf is deleted successfully";
-            }
-            return "URL does not exist";
+            if (pdf == null) return "URL does not exist";
+            _systemContext.PDFs.Remove(pdf);
+            await _systemContext.SaveChangesAsync();
+            return "pdf is deleted successfully";
         }
         catch (Exception e)
         {
@@ -83,26 +71,21 @@ public class PDFDAO : IPDFInterface
         
     }
 
-    public bool IsUrlHasPdfExtension(string url)
+    private bool IsUrlHasPdfExtension(string url)
     {
-        if (url.Length >= 4)
-        {
-            // Take the last four characters of the URL
-            string lastFourCharacters = url.Substring(url.Length - 4);
+        if (url.Length < 4) return false;
+        // Take the last four characters of the URL
+        var lastFourCharacters = url[^4..];
 
-            // Check if the last four characters contain ".pdf" extension
-            return lastFourCharacters.Equals(".pdf", StringComparison.OrdinalIgnoreCase);
-        }
-    
-        return false;
+        // Check if the last four characters contain ".pdf" extension
+        return lastFourCharacters.Equals(".pdf", StringComparison.OrdinalIgnoreCase);
     }
 
-    public async Task<string> ProcessPdfAsunc(HttpResponseMessage response, string url, int adminId )
+    private async Task<string> ProcessPdfAsync(HttpResponseMessage response, string url, int adminId )
     {
         try
         {
             var bytes = await response.Content.ReadAsStreamAsync();
-            //////////////  
             using PdfDocument document = PdfDocument.Open(bytes);
             await _systemContext.PDFs.AddAsync(new PDF { AdminId = adminId , Url = url });
             await _systemContext.SaveChangesAsync();
@@ -115,7 +98,6 @@ public class PDFDAO : IPDFInterface
                 Page page = document.GetPage(i);
                 string text = "";
                 text = page.Text;
-                  
                 var r_splitter = new RecursiveCharacterTextSplitter(["\n\n", "\n", " ", ""], 1000, 80);
                 var spl = r_splitter.SplitText(text);
 
@@ -138,8 +120,7 @@ public class PDFDAO : IPDFInterface
         catch (Exception e)
         {
             return "Something went wrong while processing the pdf. Please try again later.";
-            Console.WriteLine(e);
-            throw;
+            
         }
     }
 }
