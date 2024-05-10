@@ -108,9 +108,9 @@ public class UploadFileService : IUploadFileService
         }
     }
 
-    public async Task<string> SendFileUrl(string fileUrl)
+    public async Task<string> SendFileUrl(string fileUrl,int adminId)
     {
-        var response = await httpClient.GetStringAsync($"/PDF?url={fileUrl}");
+        var response = await httpClient.GetStringAsync($"/PDF?url={fileUrl}&adminId={adminId}");
         return response;
     }
 

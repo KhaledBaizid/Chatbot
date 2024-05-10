@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Backend.EFCData;
 using Backend.Services;
+using LangChain.Memory;
 using LangChain.Prompts;
 using LangChain.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ public class ConversationDAO : IConversationInterface
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
     private readonly ILlmChainProvider _llmChainProvider;
-
+   List<string> l = new List<string>();
     public ConversationDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, ILlmChainProvider llmChainProvider)
     {
         _systemContext = systemContext;
@@ -48,8 +49,10 @@ public class ConversationDAO : IConversationInterface
             else
             {  var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeOutSeconds));
                // string instruction
+              
                 var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but find answer within the context, and this the question: "+question); 
                 Console.WriteLine(getAnswerTask.Result.Usage.Time.TotalSeconds);
+              
               //  var promptAnswer= await _promptProvider.GetModeLlmChain().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but not find out of context, and this the question: "+question);
               
                 var completedTask = await Task.WhenAny(getAnswerTask , timeoutTask);
@@ -59,6 +62,24 @@ public class ConversationDAO : IConversationInterface
                     // Save changes completed within the timeout
                     await getAnswerTask;
                     answer = getAnswerTask.Result.ToString();
+                    //////
+                  var m= new  ConversationBufferMemory(new ChatMessageHistory());
+                 
+                 var n= m.ChatHistory.AddMessage(getAnswerTask.Result.Messages.First());
+                 l.Add(m.ChatHistory.Messages.First().ToString());
+                 foreach (var i in l)
+                 {
+                     Console.WriteLine(i.ToString()); 
+                 }
+                  
+                 // Console.WriteLine(m.ChatHistory.Messages.First().ToString());
+                //     var input = new InputValues(new Dictionary<string, object>());
+                //    input.Value.Add(question,question);
+                //     var output = new OutputValues(new Dictionary<string, object>());
+                //     output.Value.Add(answer,answer);
+                // var c=    _llmChainProvider.GetMode().Memory.SaveContext(input, output);
+                // Console.WriteLine(c.AsyncState.ToString());
+                    /// console
                 }
                 else
                 {
@@ -99,7 +120,7 @@ public class ConversationDAO : IConversationInterface
        
             var chunks = await _systemContext.Chunks
                 .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
-                .Where(x => x.Distance < 0.20)
+                .Where(x => x.Distance < 0.22)
                 .OrderBy(x => x.Distance)
                 .Take(10)
                 .ToListAsync();

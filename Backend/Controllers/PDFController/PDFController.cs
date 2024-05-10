@@ -17,11 +17,11 @@ public class PDFController : ControllerBase
     
     [EnableCors] 
     [HttpGet]
-    public async Task<ActionResult<string>> AddPDFAsync(string url)
+    public async Task<ActionResult<string>> AddPDFAsync(string url, int adminId)
     {
         try
         {
-            return StatusCode(200,await _pdfInterface.AddPDFAsync(url)); 
+            return StatusCode(200,await _pdfInterface.AddPDFAsync(url,adminId)); 
         }
         catch (Exception e)
         {

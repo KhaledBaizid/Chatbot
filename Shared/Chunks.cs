@@ -17,9 +17,9 @@ public class Chunks
     
     [ForeignKey("PDF")]
     [JsonIgnore]
-    public int PDFId { get; set; } // Foreign key
+    public int PDFId { get; set; } 
     
-    public PDF? PDF { get; set; } // Navigation property 
+    public PDF? PDF { get; set; } 
     [JsonIgnore]
     public List<Conversation_PDF_Chunks> PDFChunks { get; set; }
     
