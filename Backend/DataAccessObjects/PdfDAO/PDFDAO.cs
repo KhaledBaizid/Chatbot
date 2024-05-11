@@ -86,6 +86,7 @@ public class PDFDAO : IPDFInterface
     {
         try
         {
+            await DeletePDFAsync(url);
             var bytes = await response.Content.ReadAsStreamAsync();
             using PdfDocument document = PdfDocument.Open(bytes);
             await _systemContext.PDFs.AddAsync(new PDF { AdminId = adminId , Url = url });
