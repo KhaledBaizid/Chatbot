@@ -8,7 +8,7 @@ using Shared;
 
 namespace TestProject;
 
-public class ConversationTests
+public class ViewConversationTests
 {
     [SetUp]
     public void Setup()

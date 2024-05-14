@@ -13,7 +13,7 @@ public class PDFTests
   const string apiKey = "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";
     
     [Test]
-    public async Task ShouldGetConfirmationMessage_WithAddingPDF_WhenTheUrlISValidAndHasValidPDFExtension()
+    public async Task ShouldGetSuccesfulMessage_WithAddingPDF_WhenTheUrlISValidAndHasValidPDFExtension()
     {
     
         // Arrange
@@ -60,12 +60,13 @@ public class PDFTests
         };
         await adminService.CreateAdminAccountAsync(admin);
         await context.SaveChangesAsync();
+        
         // Act
         var result = await service.AddPDFAsync(url,1);
         var isAdded = await service.IsPDFExistAsync(url);
+        
         // Assert
         Assert.That(isAdded,Is.False);
-        Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.EqualTo("The url does not have a pdf extension, please provide a valid pdf url with valid extension"));
         await context.Database.EnsureDeletedAsync();
     }

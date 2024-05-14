@@ -6,7 +6,7 @@ using Shared;
 
 namespace TestProject;
 
-public class LoginTests
+public class AuthenticationTests
 {
      [Test]
     public async Task ReturnAdmin_WhenLogin_WithValidCredentials()
