@@ -22,7 +22,7 @@ public class ConversationController: ControllerBase
     {
         try
         {
-            return StatusCode(200,await _conversationInterface.GetConversationByChatSessionIdAsync(chatSessionId,question,3)); 
+            return StatusCode(200,await _conversationInterface.GetConversationByChatSessionIdAsync(chatSessionId,question,30)); 
         }
         catch (Exception e)
         {
