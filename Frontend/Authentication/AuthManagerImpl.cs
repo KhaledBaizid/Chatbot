@@ -29,8 +29,7 @@ public class AuthManagerImpl : IAuthManager
         int password = returnedUser.Id;
         userId = returnedUser.Id;
 
-        ValidateLoginCredentials(password); // Validate input data against data from database
-        //returnedUser.Password = "12345";								   // validation success
+        ValidateLoginCredentials(password); // Validate input data against data from databaseS
 
         await CacheUserAsync(returnedUser!); // Cache the user object in the browser 
 

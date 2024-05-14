@@ -7,39 +7,31 @@ namespace Frontend.Services.UploadFileServices;
 
 public class UploadFileService : IUploadFileService
 {
-    private readonly IConfiguration _configuration;
     private readonly ILogger<UploadFileService> _logger;
     private readonly string blobContainerName = "pdfiles";
-    private string connectionString;
+    private readonly string connectionString =
+        "DefaultEndpointsProtocol=https;AccountName=sepfiles;AccountKey=+TcC9h5fVZIAF6whSo95aTEe7MD/jBUtVI5CTMN4wo4iyIJQbu3j3J1uU/xMV0HtMTllbV04Jb17+AStM7KVcg==;EndpointSuffix=core.windows.net";
 
     private readonly HttpClient httpClient;
 
 
-    public UploadFileService(IConfiguration configuration, ILogger<UploadFileService> logger, HttpClient httpClient)
+    public UploadFileService( ILogger<UploadFileService> logger, HttpClient httpClient)
     {
-        _configuration = configuration;
         _logger = logger;
         this.httpClient = httpClient;
-        _configuration.GetConnectionString(
-            "DefaultEndpointsProtocol=https;AccountName=sepfiles;AccountKey=+TcC9h5fVZIAF6whSo95aTEe7MD/jBUtVI5CTMN4wo4iyIJQbu3j3J1uU/xMV0HtMTllbV04Jb17+AStM7KVcg==;EndpointSuffix=core.windows.net");
     }
 
     public async Task<string> UploadFileToBlobAsync(string strFileName, string contecntType, Stream fileStream)
     {
         try
         {
-            var container = new BlobContainerClient(
-                "DefaultEndpointsProtocol=https;AccountName=sepfiles;AccountKey=+TcC9h5fVZIAF6whSo95aTEe7MD/jBUtVI5CTMN4wo4iyIJQbu3j3J1uU/xMV0HtMTllbV04Jb17+AStM7KVcg==;EndpointSuffix=core.windows.net",
-                blobContainerName);
-            //var createResponse = await container.CreateIfNotExistsAsync();
-            //if (createResponse != null && createResponse.GetRawResponse().Status == 201)
-                await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+            var container = new BlobContainerClient(connectionString, blobContainerName);
+
+            await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
             var blob = container.GetBlobClient(strFileName);
-           var DeleteIfExistsAsync = await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+            var DeleteIfExistsAsync = await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
             await blob.UploadAsync(fileStream, new BlobHttpHeaders { ContentType = contecntType });
             var urlString = blob.Uri.ToString();
-            // var response = await SendFileUrl(urlString);
-            // Console.WriteLine("response for send utl request is: " + response);
             Console.WriteLine(urlString);
             return urlString;
         }
@@ -54,23 +46,11 @@ public class UploadFileService : IUploadFileService
     {
         try
         {
-            var container = new BlobContainerClient(
-                "DefaultEndpointsProtocol=https;AccountName=sepfiles;AccountKey=+TcC9h5fVZIAF6whSo95aTEe7MD/jBUtVI5CTMN4wo4iyIJQbu3j3J1uU/xMV0HtMTllbV04Jb17+AStM7KVcg==;EndpointSuffix=core.windows.net",
-                blobContainerName);
-            // two lines below are not needed, 
-            // var createResponse = await container.CreateIfNotExistsAsync();
-            // if (createResponse != null && createResponse.GetRawResponse().Status == 201)
-           
-                await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+            var container = new BlobContainerClient(connectionString, blobContainerName);
+            await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
             var blob = container.GetBlobClient(strFileName);
             var urlString = blob.Uri.ToString();
-              await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
-
-            // var response = await DeleteFileUrl(urlString);
-            
-            // Console.WriteLine("response for delete utl request is: " + response);
-
-
+            await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
             return true;
         }
         catch (Exception ex)
@@ -84,9 +64,7 @@ public class UploadFileService : IUploadFileService
     {
         try
         {
-            var container = new BlobContainerClient(
-                "DefaultEndpointsProtocol=https;AccountName=sepfiles;AccountKey=+TcC9h5fVZIAF6whSo95aTEe7MD/jBUtVI5CTMN4wo4iyIJQbu3j3J1uU/xMV0HtMTllbV04Jb17+AStM7KVcg==;EndpointSuffix=core.windows.net",
-                blobContainerName);
+            var container = new BlobContainerClient(connectionString, blobContainerName);
             var blobs = container.GetBlobsAsync();
             var files = new List<FileUploadViewModel>();
 
@@ -109,22 +87,21 @@ public class UploadFileService : IUploadFileService
         }
     }
 
-    public async Task<string> SendFileUrl(string fileUrl,int adminId)
-    {  
+    public async Task<string> SendFileUrl(string fileUrl, int adminId)
+    {
         var endpointUrl = $"{httpClient.BaseAddress}PDF/?url={fileUrl}&adminId={adminId}";
         var response = await httpClient.PostAsJsonAsync(endpointUrl, new { });
-      //  var response = await httpClient.GetStringAsync($"/PDF?url={fileUrl}&adminId={adminId}");
-      if (response.IsSuccessStatusCode)
-      {
-          var responseContent = await response.Content.ReadAsStringAsync();
-          return responseContent;
-      }
-      else
-      {
-          var errorContent = await response.Content.ReadAsStringAsync();
-          return errorContent;
-      }
-       // return response;
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return responseContent;
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            return errorContent;
+        }
     }
 
     public async Task<string> DeleteFileUrl(string fileUrl)

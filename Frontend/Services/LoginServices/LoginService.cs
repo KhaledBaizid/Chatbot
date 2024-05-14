@@ -17,9 +17,6 @@ public class LoginService : ILoginService
     {
         string mail = admin.Mail;
         string password = admin.Password;
-
-        //hello
-
         var response = await httpClient.GetFromJsonAsync<Admin>($"/Authentication?mail={mail}&password={password}");
         return response;
              
