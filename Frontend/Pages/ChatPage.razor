@@ -10,7 +10,7 @@
 @inject IConversationService conversationService
 @inject IFeedbackService feedbackService
 @inject SweetAlertService MySweetAlertService
- 
+
 
 <style> 
     
@@ -76,7 +76,15 @@ else
                 }
 
 
-                <input @bind="userInput" @onkeyup="HandleKeyUp"/>
+              <div class="inputComponent">
+                  <input @bind="userInput" @onkeyup="HandleKeyUp"/>
+                  <button class="colorless-button" @onclick="HandleButtonClick">
+                      <span class="material-icons">
+                          send
+                      </span>
+                  </button>
+              </div>
+              
 
 
             </div>
@@ -97,22 +105,22 @@ else
 
 
     ElementReference chatContainer;
-    
+
     private async Task HandleKeyUp(KeyboardEventArgs e)
     {
         if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(userInput))
         {
             messages.Add(new Message { Text = userInput, IsUser = true });
-           
-         
+
+
             await JSRuntime.InvokeVoidAsync("scrollToBottom2", "chat-messages");
             StateHasChanged(); // Force a UI update
             await JSRuntime.InvokeVoidAsync("scrollToBottom2", "chat-messages");
-            
+
 
             var chatSession = await GetConversationByChatSessionId(ResponseId, userInput);
             userInput = "";
-          
+
             var serverResponse = chatSession.Conversations.FirstOrDefault()?.Answer ?? "No response from server";
             IdOfFirstConversation = chatSession.Conversations.FirstOrDefault()?.Id;
             messages.Add(new Message { Text = serverResponse, IsUser = false });
@@ -121,30 +129,11 @@ else
             await JSRuntime.InvokeVoidAsync("scrollToBottom2", "chat-messages");
         }
     }
-
-/*
-    private async Task HandleKeyUp(KeyboardEventArgs e)
+    private async Task HandleButtonClick()
     {
-        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(userInput))
-        {
-            messages.Add(new Message { Text = userInput, IsUser = true });
-           
-            var chatSession = await GetConversationByChatSessionId(ResponseId, userInput);
-            var serverResponse = chatSession.Conversations.FirstOrDefault()?.Answer ?? "No response from server";
-            IdOfFirstConversation = chatSession.Conversations.FirstOrDefault()?.Id;
-            userInput = ""; StateHasChanged(); // Force a UI update
-            await JSRuntime.InvokeVoidAsync("scrollToBottom2", "chat-messages");
-            messages.Add(new Message { Text = serverResponse, IsUser = false });
-
-           
-          
-            StateHasChanged(); // Force a UI update
-            await JSRuntime.InvokeVoidAsync("scrollToBottom2", "chat-messages");
-        }
+        await HandleKeyUp(new KeyboardEventArgs { Key = "Enter" });
     }
-
-*/
-    private async Task<Chat_session> GetConversationByChatSessionId(string ResponseId, string question)
+  private async Task<Chat_session> GetConversationByChatSessionId(string ResponseId, string question)
     {
         int parsIdToInt = Int32.Parse(ResponseId);
 
@@ -158,7 +147,7 @@ else
     {
         var response = await feedbackService.GiveFeedbackAsync(firstConversationid, likeDislikeButton);
 
-    
+
         var PositiveResponse = FeedbackMessages.PositiveMessage;
         var NegativeResponse = FeedbackMessages.NegativeMessage;
 
@@ -169,7 +158,7 @@ else
 
         if (response == NegativeResponse)
         {
-            await ShowAlert( NegativeResponse);
+            await ShowAlert(NegativeResponse);
         }
     }
 

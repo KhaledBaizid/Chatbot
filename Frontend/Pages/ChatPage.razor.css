@@ -63,6 +63,7 @@ input {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
+    margin: 10px;
 }
 
 .message {
@@ -152,4 +153,32 @@ input {
     100% {
         transform: rotate(360deg)
     }
+}
+
+.inputComponent{
+    display: flex;
+    
+    
+}
+.inputComponent span {
+    /* Your styles here */
+    
+    color: green;
+ 
+    width: 50px;
+    
+}
+.inputComponent span.material-icons {
+   /* Adjust this value to make the icon bigger or smaller */
+    font-size: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.colorless-button {
+    background: none;
+    border: none;
+    color: inherit;
+
+ 
 }
