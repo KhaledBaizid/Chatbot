@@ -1,4 +1,5 @@
-﻿.chatPage {
+﻿
+.chatPage {
 
     min-width: 375px;: rgb(0, 212, 255);
     /*background: linear-gradient(90deg, rgba(0, 212, 255, 1) 8%, rgba(9, 9, 121, 1) 24%, rgba(2, 0, 36, 1) 100%);*/
@@ -22,19 +23,20 @@
     box-shadow: 0 0 33px rgba(0, 0, 0, 1);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    background-color: white;
 }
 .chat-container {
 
     
     padding: 20px;
 
-    /*background-color: blue;*/
+    
 
 
 }
 
 .chat-messages {
-    height: 400px;
+    height: 650px;
     overflow-y: auto;
     
     border-top-left-radius: 20px;
@@ -80,18 +82,22 @@ input {
 }
 
 .message:hover {
-    color: black;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+    /*color: black;*/
+    /*box-shadow: 0 0 1px rgba(0, 0, 0, 0.2); !* Add a shadow on hover *!*/
     transform: scale(1.02); /* Increase the size of the element on hover */
 }
 .user-message {
     text-align: right;
-    color: #01015e;
+    /*color: #01015e;*/
+    color: black;
+    background-color: lightgray;
 }
 
 .chatbot-message {
     text-align: left;
-    color: #01015e;
+    /*color: #01015e;*/
+    color: black;
+    /*background-color: #f1f1f1;*/
 }
 .contentUserMsg{
   
