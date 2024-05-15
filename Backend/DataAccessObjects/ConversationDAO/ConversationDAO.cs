@@ -50,7 +50,7 @@ public class ConversationDAO : IConversationInterface
             {  var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeOutSeconds));
                
               // use llmChain provider to generate the answer
-                var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(Context+" "+question); 
+                var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(" Use the following pieces of context to answer the question at the end.\n     If the answer is not in context then just say that you don't know, don't try to make up an answer. this is the context:\n "+Context+".\n . and this the question: \n"+question);
                
                 Console.WriteLine(getAnswerTask.Result.Usage.Time.TotalSeconds);
               
@@ -102,9 +102,9 @@ public class ConversationDAO : IConversationInterface
        
             var chunks = await _systemContext.Chunks
                 .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
-                .Where(x => x.Distance < 0.22)
+                .Where(x => x.Distance < 0.25)
                 .OrderBy(x => x.Distance)
-                .Take(10)
+                .Take(15)
                 .ToListAsync();
             foreach (var chunk in chunks)
             {  
