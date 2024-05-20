@@ -17,7 +17,7 @@ public class FeedbackService : IFeedbackService
     public async Task<string> GiveFeedbackAsync(int? conversationId, FeedbackEnum feedback)
     {
         //   var response = await httpClient.PutAsJsonAsync<string>($"/Feedback?conversationId={conversationId}&feedback={feedback}");
-        
+
         try
         {
             // Construct the URL with the conversationId and feedback parameters
@@ -40,9 +40,12 @@ public class FeedbackService : IFeedbackService
         }
     }
 
-    public Task<List<Conversation>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate,
-        string feedback)
+    public async Task<List<Conversation>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
     {
-        throw new NotImplementedException();
+        string Sdate = startDate.ToString("yyyy-MM-dd");
+        string Edate = endDate.ToString("yyyy-MM-dd");
+
+        var response = await httpClient.GetFromJsonAsync<List<Conversation>>($"/Conversation/ByFeedbackAndByDate?startDate={Sdate}&endDate={Edate}&feedback={feedback}");
+        return response;
     }
 }

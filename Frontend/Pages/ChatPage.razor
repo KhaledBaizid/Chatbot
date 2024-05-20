@@ -10,7 +10,7 @@
 @inject IConversationService conversationService
 @inject IFeedbackService feedbackService
 @inject SweetAlertService MySweetAlertService
-
+@using Microsoft.AspNetCore.Components.Authorization
 
 <style> 
     
@@ -23,77 +23,294 @@
     
 </style>
 
+<AuthorizeView>
 
-@if (ResponseId == null)
-{
-    <div class="spinner"></div>
-}
-
-else
-{
-    <div class="chatPage row  ">
-
-        <div class="chatlist col-xxl-2 col-xl-2 col-lg-2 col-md-5 col-sm-12">
+    <NotAuthorized>
 
 
-        </div>
-        <div class="chat-container col-xxl-10 col-xl-10 col-lg-10 col-md-7 col-sm-12">
-            <div class="insideContainer">
+        @if (ResponseId == null)
+        {
+            <div class="spinner"></div>
+        }
+
+        else
+        {
+            <div class="chatPage row  ">
 
 
-                <div class="chat-messages" @ref="chatContainer">
-                    @foreach (var message in messages)
-                    {
-                        if (message.IsUser)
+                <div class="chat-container col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="insideContainer">
+
+
+                        <div class="chat-messages" @ref="chatContainer">
+                            @foreach (var message in messages)
+                            {
+                                if (message.IsUser)
+                                {
+                                    <div class="contentUserMsg">
+                                        <i class="fas fa-user icon userIcon"></i>
+                                        <p class="message user-message">@message.Text</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="contentChatMsg">
+                                        <i class="fas fa-robot icon"></i>
+                                        <p class="message chatbot-message">@message.Text</p>
+                                    </div>
+                                }
+                            }
+
+
+                        </div>
+
+                        @if (IdOfFirstConversation.HasValue)
                         {
-                            <div class="contentUserMsg">
-                                <i class="fas fa-user icon userIcon"></i>
-                                <p class="message user-message">@message.Text</p>
+                            <div class="feedback">
+                                <button class="btn btn-primary likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Positive)">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                </button>
+                                <button class="btn btn-danger likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Negative)">
+                                    <i class="fas fa-thumbs-down"></i> Dislike
+                                </button>
                             </div>
                         }
-                        else
+
+
+                        <div class="inputComponent">
+                            <input @bind="userInput" @onkeyup="HandleKeyUp"/>
+                            <button class="colorless-button" @onclick="HandleButtonClick">
+                                <span class="material-icons">
+                                    send
+                                </span>
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </NotAuthorized>
+
+    <Authorized>
+        @if (ResponseId == null)
+        {
+            <div class="spinner"></div>
+        }
+
+        else
+        {
+            <div class="chatPage row  ">
+                <div class="chatlist col-xxl-2 col-xl-2 col-lg-2 col-md-5 col-sm-12">
+                    <!-- Sidebar -->
+
+                    <div class="w3-sidebar w3-bar-block w3-border-right" id="mySidebar">
+                        <button @onclick="w3_close" class="w3-bar-item w3-large">Close &times;</button>
+
+                        <div class="w3-container">
+                            <select class="filterdropdown w3-button w3-black" @onchange="SetFeedbackType">
+                                <option value="Filter">Filter by Feedback</option>
+                                <option value="Positive">Positive</option>
+                                <option value="Negative">Negative</option>
+                                <option value="Neutral">Neutral</option>
+                            </select>
+                        </div>
+
+
+                        <div class="dates">
+                            <div class="w3-bar-item">
+                                <label for="start-date">Start Date:</label>
+                                <input type="date" id="start-date" name="start-date" @bind="startDate" @bind:format="yyyy-MM-dd">
+                            </div>
+                            <div class="w3-bar-item">
+                                <label for="end-date">End Date:</label>
+                                <input type="date" id="end-date" name="end-date" @bind="endDate" @bind:format="yyyy-MM-dd">
+                            </div>
+
+
+                        </div>
+
+                        <div class="button-container">
+                            <button type="button" class="filterbtn btn btn-primary" @onclick="FilterByFeedback">Click To Filter</button>
+                        </div>
+
+               
+
+                    </div>
+
+                    <!-- Page Content -->
+                    <div class="w3-teal">
+                        <button class="w3-button w3-teal w3-xlarge" @onclick="w3_open">☰</button>
+
+                    </div>
+                </div>
+
+                <div class="chat-container col-xxl-10 col-xl-10 col-lg-10 col-md-7 col-sm-12">
+                    <div class="insideContainer">
+
+
+                        <div class="chat-messages" @ref="chatContainer">
+                            @foreach (var message in messages)
+                            {
+                                if (message.IsUser)
+                                {
+                                    <div class="contentUserMsg">
+                                        <i class="fas fa-user icon userIcon"></i>
+                                        <p class="message user-message">@message.Text</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="contentChatMsg">
+                                        <i class="fas fa-robot icon"></i>
+                                        <p class="message chatbot-message">@message.Text</p>
+                                    </div>
+                                }
+                            }
+
+
+                        </div>
+
+                        @if (IdOfFirstConversation.HasValue)
                         {
-                            <div class="contentChatMsg">
-                                <i class="fas fa-robot icon"></i>
-                                <p class="message chatbot-message">@message.Text</p>
+                            <div class="feedback">
+                                <button class="btn btn-primary likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Positive)">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                </button>
+                                <button class="btn btn-danger likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Negative)">
+                                    <i class="fas fa-thumbs-down"></i> Dislike
+                                </button>
                             </div>
                         }
-                    }
+
+
+                        <div class="inputComponent">
+                            <input @bind="userInput" @onkeyup="HandleKeyUp"/>
+                            <button class="colorless-button" @onclick="HandleButtonClick">
+                                <span class="material-icons">
+                                    send
+                                </span>
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+                @if (Conversations == null)
+                {
+                    <p>
+                        <em> </em>
+                    </p>
+                }
+                else
+                {
+                    <div class="feedbackDiv">
+                        <div>
+                            <h1 class="feedbackH1">Feedbacks Got @feedbackType</h1>
+                        </div>
+                        <table class="feedbackTable">
+                            <thead class="theadfeedback">
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                            </thead>
+                            
+                            <tbody>
+                            @foreach (var conversation in Conversations)
+                            {
+                                <tr class="feedbacktr">
+                                    <td class="questionColumn">@conversation.Question</td>
+                                    <td>@conversation.Answer</td>
+                                </tr>
+                            }
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                }
+            </div>
+        }
+
+
+        @*
+        @if (ResponseId == null)
+        {
+            <div class="spinner"></div>
+        }
+
+        else
+        {
+            <div class="chatPage row  ">
+
+                <div class="chatlist col-xxl-2 col-xl-2 col-lg-2 col-md-5 col-sm-12">
 
 
                 </div>
+                <div class="chat-container col-xxl-10 col-xl-10 col-lg-10 col-md-7 col-sm-12">
+                    <div class="insideContainer">
 
-                @if (IdOfFirstConversation.HasValue)
-                {
-                    <div class="feedback">
-                        <button class="btn btn-primary likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Positive)">
-                            <i class="fas fa-thumbs-up"></i> Like
-                        </button>
-                        <button class="btn btn-danger likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Negative)">
-                            <i class="fas fa-thumbs-down"></i> Dislike
-                        </button>
+                        <div class="chat-messages" @ref="chatContainer">
+                            @foreach (var message in messages)
+                            {
+                                if (message.IsUser)
+                                {
+                                    <div class="contentUserMsg">
+                                        <i class="fas fa-user icon userIcon"></i>
+                                        <p class="message user-message">@message.Text</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="contentChatMsg">
+                                        <i class="fas fa-robot icon"></i>
+                                        <p class="message chatbot-message">@message.Text</p>
+                                    </div>
+                                }
+                            }
+
+
+                        </div>
+
+                        @if (IdOfFirstConversation.HasValue)
+                        {
+                            <div class="feedback">
+                                <button class="btn btn-primary likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Positive)">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                </button>
+                                <button class="btn btn-danger likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Negative)">
+                                    <i class="fas fa-thumbs-down"></i> Dislike
+                                </button>
+                            </div>
+                        }
+
+
+                        <div class="inputComponent">
+                            <input @bind="userInput" @onkeyup="HandleKeyUp"/>
+                            <button class="colorless-button" @onclick="HandleButtonClick">
+                                <span class="material-icons">
+                                    send
+                                </span>
+                            </button>
+                        </div>
+
+
                     </div>
-                }
-
-
-              <div class="inputComponent">
-                  <input @bind="userInput" @onkeyup="HandleKeyUp"/>
-                  <button class="colorless-button" @onclick="HandleButtonClick">
-                      <span class="material-icons">
-                          send
-                      </span>
-                  </button>
-              </div>
-              
-
-
+                </div>
             </div>
-        </div>
-    </div>
-}
+        }
+        *@
+
+    </Authorized>
+</AuthorizeView>
 
 
 @code {
+
+    private DateTime startDate;
+    private DateTime endDate;
 
     [Parameter] public string ResponseId { get; set; }
 
@@ -105,6 +322,13 @@ else
 
 
     ElementReference chatContainer;
+
+    protected override void OnInitialized()
+    {
+        startDate = DateTime.Now;
+        endDate = DateTime.Now.AddMinutes(5);
+        base.OnInitialized();
+    }
 
     private async Task HandleKeyUp(KeyboardEventArgs e)
     {
@@ -129,11 +353,13 @@ else
             await JSRuntime.InvokeVoidAsync("scrollToBottom2", "chat-messages");
         }
     }
+
     private async Task HandleButtonClick()
     {
         await HandleKeyUp(new KeyboardEventArgs { Key = "Enter" });
     }
-  private async Task<Chat_session> GetConversationByChatSessionId(string ResponseId, string question)
+
+    private async Task<Chat_session> GetConversationByChatSessionId(string ResponseId, string question)
     {
         int parsIdToInt = Int32.Parse(ResponseId);
 
@@ -163,7 +389,7 @@ else
     }
 
 
-    public async Task ShowAlert(string msg)
+    private async Task ShowAlert(string msg)
     {
         await MySweetAlertService.FireAsync(new SweetAlertOptions
         {
@@ -175,5 +401,74 @@ else
             Timer = 3000
         });
     }
+
+    private async Task ShowAlertErrorMsg(string msg)
+    {
+        await MySweetAlertService.FireAsync(new SweetAlertOptions
+        {
+            Position = SweetAlertPosition.Center,
+            Icon = SweetAlertIcon.Error,
+            Title = "Feedback",
+            Text = msg,
+            ShowConfirmButton = true,
+            Timer = 15000
+        });
+    }
+
+    private async Task w3_open()
+    {
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('mySidebar').style.display = 'block';");
+    }
+
+    private async Task w3_close()
+    {
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('mySidebar').style.display = 'none';");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("eval", @"
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 350) {
+                    document.getElementById('mySidebar').style.display = 'none';
+                }  
+
+            });
+        ");
+        }
+    }
+
+    string feedbackType;
+
+
+    private void SetFeedbackType(ChangeEventArgs e)
+    {
+        feedbackType = e.Value.ToString();
+    }
+
+    public List<Conversation> Conversations { get; set; }
+
+    private async Task FilterByFeedback()
+    {
+        if (startDate > endDate)
+        {
+            // Display an error message about the date range
+            await ShowAlertErrorMsg("Start date must be before end date!");
+            return;
+        }
+
+        if (feedbackType != "Positive" && feedbackType != "Negative" && feedbackType != "Neutral")
+        {
+            // Display an error message about the feedback type
+            await ShowAlertErrorMsg("Please Choose a Feedback Type!");
+            return;
+        }
+
+        Conversations = await feedbackService.GetConversationsByFeedbackAndByDateAsync(startDate, endDate, feedbackType);
+        StateHasChanged();
+    }
+
 
 }

@@ -3,7 +3,7 @@
 
     min-width: 375px;: rgb(0, 212, 255);
     /*background: linear-gradient(90deg, rgba(0, 212, 255, 1) 8%, rgba(9, 9, 121, 1) 24%, rgba(2, 0, 36, 1) 100%);*/
-    height: 100vh;
+    
     width: 100%;
     margin: 0px;
 
@@ -11,7 +11,7 @@
 }
 
 .chatlist {
-    background-color: black;
+    /*background-color: black;*/
 
 
 }
@@ -24,7 +24,10 @@
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     background-color: white;
+    
 }
+
+ 
 .chat-container {
 
     
@@ -44,6 +47,19 @@
     padding: 10px;
     margin-bottom: 20px;
     box-shadow: 0 0 33px rgba(0, 0, 0, 1);
+}
+@media (min-width: 992px) and (max-width: 1920px) {
+    .insideContainer {
+        max-width: 600px;
+
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1920px) {
+    .chat-messages  {
+        height: 400px;
+
+    }
 }
 
 .chat-messages p {
@@ -181,4 +197,137 @@ input {
     color: inherit;
 
  
+}
+
+.w3-sidebar {
+    position: relative;
+    left: 0;
+    width: 250px;
+    background-color: silver;
+    color: black;
+}
+
+
+@media (max-width: 768px) {
+    .w3-sidebar {
+        position: fixed !important;
+        max-width: 250px;
+        left: 0;
+    }
+}
+
+ 
+.w3-teal, .w3-hover-teal:hover {
+    color: #fff !important;
+    background-color: transparent !important;
+}
+.w3-container{
+    margin-top: 8px;
+    border-radius: 20px;
+    width: 200px;
+    padding: 5px;
+}
+
+.filterdropdown{
+    
+    /* color: black !important; */
+    background: dimgrey !important; 
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.filterbtn {
+    background: dimgrey !important;
+    color: white !important;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 5px;
+    width: 100%;
+    
+    
+}
+.filterbtn:hover {
+    background-color: yellow !important;  
+    color: black !important;
+    transition: all 0.3s ease !important;
+}
+
+.feedbackDiv {
+
+    width: 100%;
+    margin-right: 150px !important;
+    margin: auto;
+    
+}
+
+.theadfeedback{
+ 
+}
+.feedbackTable{
+    border-spacing: 0 10px; /* This adds a 10px vertical spacing */
+    width: 100%;
+     
+    border-collapse: collapse;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px rgba(0,0,0,0.5); /* Add shadow */
+
+     
+}
+.feedbackTable tbody {
+    border: 10px solid transparent; /* This adds a 10px transparent border */
+}
+
+feedbackTable, td, th {
+ 
+    padding: 10px;
+    margin-top: 10px;
+ 
+}
+th{
+    background-color: yellow;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+    
+}
+td, th {
+     
+    padding: 20px;
+    transition: background-color 0.5s ease;
+    text-align: center;
+    box-shadow: 0px 0px 30px rgba(0,0,0,0.8); /* Add shadow */
+   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-shadow: black 1px 1px 1px;
+    font-size: 20px;
+  
+}
+ 
+ 
+tr:hover{
+
+   width: 100%;
+    background-color: yellow;
+    color: black;
+    transform: scale(1.05);
+}
+.questionColumn {
+    width: 40%; /* Adjust this value as needed */
+}
+
+.feedbackH1{
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    margin: 20px;
+    transform: scale(1.05);
+    box-shadow: 2px 2px 30px rgba(0,0,0,0.8); /* Add shadow */
+    padding: 20px;
+    font-style: italic;
+    
 }
