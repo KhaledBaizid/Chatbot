@@ -17,22 +17,31 @@
                 <div class="collapse navbar-collapse @NavBarCssClass" id="navbarCollapse" @onclick="ToggleNavMenu">
 
 
-                    <button class="homebtn btn btn-outline-success  " @onclick="Login">Home</button>
+                    @* <a class="homebtn btn btn-outline-success  " @onclick="Login">Home</a> *@
 
 
-                    @* <a class="navbar-brand" href="">Home</a> *@
-                    @* <a class="navbar-brand" href="">Manage Login</a> *@
+                    <nav class="shift">
+                        <ul>
+                            <li>
+                                <a @onclick="Login">Home</a>
+                            </li>
+                            <li>
+                                <a href="#">About</a>
+                            </li>
+
+
+                        </ul>
+                    </nav>
 
 
                     <ul class="navbar-nav me-auto mb-2 mb-md-0 homeItem">
 
 
                         <li class="nav-item text-item-li">
-                            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Login">Admin Login</button>
-                            @* <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
-                            @*     <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Login">Admin Login</button> *@
-                            @*     $1$ <span class="oi oi-home" aria-hidden="true"  ></span>  #1# *@
-                            @* </NavLink> *@
+                            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Login">
+                                <i class="fas fa-sign-in-alt"></i> Admin Login
+                            </button>
+
                         </li>
 
                     </ul>
@@ -53,19 +62,36 @@
 
                 <div class="collapse navbar-collapse @NavBarCssClass" id="navbarCollapse" @onclick="ToggleNavMenu">
 
-                    <button class="homebtn btn btn-outline-success  " @onclick="HomePage">Home</button>
-                    <button class="Managebtn btn btn-outline-success " @onclick="GoToManageCredential">Manage Login</button>
-                     <button class="Uploadbtn btn btn-outline-success " @onclick="UploadFilePage">Upload File</button>
+
+                    <nav class="shift">
+                        <ul>
+                            <li>
+                                <a href="#" @onclick="Login">Home</a>
+                            </li>
+
+
+                            <li>
+                                <a class="Managelogin " @onclick="GoToManageCredential">Manage Login</a>
+                            </li>
+
+                            <li>
+                                <a class="upfile" @onclick="UploadFilePage">Upload File</a>
+                            </li>
+                            <li>
+                                <a href="#">About</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+
                     <ul class="navbar-nav me-auto mb-2 mb-md-0 homeItem">
 
 
                         <li class="nav-item text-item-li">
-                            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">Logout</button>
-                            @* *@
-                            @* <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
-                            @*     <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">Logout</button> *@
-                            @*     <span class="oi oi-home" aria-hidden="true"></span> *@
-                            @* </NavLink> *@
+                            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="Logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+
                         </li>
 
                     </ul>
@@ -91,7 +117,7 @@
     {
         NavigationManager.NavigateTo("/LoginPage");
     }
-    
+
     protected async Task GoToManageCredential()
     {
         NavigationManager.NavigateTo("/ManageLoginCredential");
@@ -101,7 +127,7 @@
     {
         NavigationManager.NavigateTo("/");
     }
-    
+
     protected async Task UploadFilePage()
     {
         NavigationManager.NavigateTo("/UploadFilePage");
