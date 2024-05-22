@@ -14,7 +14,7 @@
     border-collapse: separate;
     border-spacing: 10px;
     border: none;
-    color: yellow;
+    color: #F1C40F ;
     
 }
 
@@ -23,7 +23,7 @@
     border-radius: 10px;
     transition: background-color 0.3s ease;
     mergin-left: 20px;
-    color: yellow;
+    color: #F1C40F ;
    
   
     
@@ -54,13 +54,13 @@
     color: red;
 }
 .btn-primary1 {
-    background-color: yellow;
+    background-color: #F1C40F ;
     color: blue;
     width: 110px;
      
 }
 .text-primary {
-    color: yellow !important;
+    color: #F1C40F  !important;
 }
 @media (max-width: 575px ) {
     .btn-primary {

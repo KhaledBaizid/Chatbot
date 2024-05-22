@@ -1,13 +1,14 @@
 ﻿@page "/"
 @layout MainPageComponent
 @inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager;
+
 @inject IChatSessionService ChatSessionService;
 @using System.Threading
 @using BlazorTypewriter
 @using Frontend.Services
 @using Frontend.Services.ChatSessionServices
 @using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager;
 @inject SweetAlertService MySweetAlertService
 <AuthorizeView>
     <NotAuthorized>

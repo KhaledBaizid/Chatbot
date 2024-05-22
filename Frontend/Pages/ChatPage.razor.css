@@ -16,6 +16,7 @@
 
 }
 .insideContainer {
+    margin-bottom: 60px !important;
     max-width: 800px; /* Set the maximum width of the container */
     margin: auto; /* Center the container */
     justify-content: center;
@@ -241,16 +242,17 @@ input {
 }
 .filterbtn {
     background: dimgrey !important;
-    color: white !important;
-    border-radius: 20px;
+    
+    border: 1px solid white !important;
+    box-shadow: black 1px 1px 1px;
     padding: 10px;
     margin: 5px;
-    width: 100%;
+    width: 65%;
     
     
 }
 .filterbtn:hover {
-    background-color: yellow !important;  
+    background-color:  #F1C40F  !important;  
     color: black !important;
     transition: all 0.3s ease !important;
 }
@@ -288,7 +290,7 @@ feedbackTable, td, th {
  
 }
 th{
-    background-color: yellow;
+    background-color: #F1C40F ;
     color: black;
     font-size: 20px;
     font-weight: bold;
@@ -312,7 +314,7 @@ td, th {
 tr:hover{
 
    width: 100%;
-    background-color: yellow;
+    background-color: #F1C40F ;
     color: black;
     transform: scale(1.05);
 }
@@ -330,4 +332,65 @@ tr:hover{
     padding: 20px;
     font-style: italic;
     
+}
+
+
+.container-chat-session{
+    display: flex;
+    margin: 10px;
+    margin-top: 15px;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px rgba(0,0,0,0.8); /* Add shadow */
+    background-color: white;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-shadow: black 1px 1px 1px;
+    transition: background-color 0.5s ease;
+    cursor: pointer;
+}
+.container-chat-session:hover{
+    background-color: #F1C40F ;
+    color: black;
+    transform: scale(1.05);
+}
+.chat-sessionside{
+
+    margin-top: 8px;
+}
+.hidden {
+    display: none;
+}
+.chat-button-container {
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+
+
+}
+.chat-label {
+
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+
+}
+.chat-button {
+    background-color: #0a53be;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 0px;
+    padding: 20px;
+
 }

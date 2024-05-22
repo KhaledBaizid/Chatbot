@@ -44,4 +44,13 @@ public class ChatSessionService :   IChatSessionService
     {
         throw new NotImplementedException();
     }
+
+    public async Task<List<Chat_session>> GetChatSessionsByDate(DateTime startDate, DateTime endDate)
+    {
+        string Sdate = startDate.ToString("yyyy-MM-dd");
+        string Edate = endDate.ToString("yyyy-MM-dd");
+
+        var response = await httpClient.GetFromJsonAsync<List<Chat_session>>($"/ChatSession/ChatSessionsByDate?startDate={Sdate}&endDate={Edate}");
+        return response;
+    }
 }
