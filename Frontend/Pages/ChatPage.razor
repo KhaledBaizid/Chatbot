@@ -2,14 +2,18 @@
 @page "/ChatPage/{ResponseId}"
 @using UploadFile.Models
 @using Frontend.Services
+@using Frontend.Services.ChatSessionServices
 @using Frontend.Services.ConversationServices
 @using Frontend.Services.FeedbackServices
 @using Shared
 @layout MainPageComponent
 @inject IJSRuntime JSRuntime
 @inject IConversationService conversationService
+@inject IChatSessionService chatSessionService
 @inject IFeedbackService feedbackService
 @inject SweetAlertService MySweetAlertService
+@inject NavigationManager NavigationManager
+@inject IChatSessionService ChatSessionService;
 @using Microsoft.AspNetCore.Components.Authorization
 
 <style> 
@@ -19,7 +23,8 @@
         background: rgb(2, 0, 36);
         background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%);
    }
-  
+   
+   
     
 </style>
 
@@ -133,10 +138,32 @@
                         </div>
 
                         <div class="button-container">
-                            <button type="button" class="filterbtn btn btn-primary" @onclick="FilterByFeedback">Click To Filter</button>
+                            <button type="button" class="filterbtn btn btn-primary" @onclick="FilterByFeedback">
+                                <i class="fas fa-filter"></i> Click To Filter
+                            </button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="filterbtn btn btn-primary" @onclick="GetAllChatSessionByDate">
+                                <i class="fas fa-list"></i> Get All Chats
+                            </button>
                         </div>
 
-               
+                        <div class="list-of-chat-sessions">
+
+                            @if (ChatSessions != null)
+                            {
+                                @foreach (var ChatSession in ChatSessions)
+                                {
+                                    <div class="container-chat-session" @onclick="() => FetchChatSession(ChatSession.Id)">
+                                        <p class="chat-sessionside chat-session-id">ID: @ChatSession.Id </p>
+                                        <p class="chat-sessionside chat-session-date">Date: @ChatSession.ChatTime.ToString("dd/MM/yyyy")</p>
+                                    </div>
+                                }
+                            }
+
+
+                        </div>
+
 
                     </div>
 
@@ -175,7 +202,7 @@
 
                         @if (IdOfFirstConversation.HasValue)
                         {
-                            <div class="feedback">
+                            <div class="feedback @(isChatActive ? "" : "hidden")">
                                 <button class="btn btn-primary likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Positive)">
                                     <i class="fas fa-thumbs-up"></i> Like
                                 </button>
@@ -186,9 +213,9 @@
                         }
 
 
-                        <div class="inputComponent">
-                            <input @bind="userInput" @onkeyup="HandleKeyUp"/>
-                            <button class="colorless-button" @onclick="HandleButtonClick">
+                        <div class="inputComponent @(isChatActive ? "" : "hidden")">
+                            <input @bind="userInput" @onkeyup="HandleKeyUp" disabled="@(!isChatActive)"/>
+                            <button class="colorless-button" @onclick="HandleButtonClick" disabled="@(!isChatActive)">
                                 <span class="material-icons">
                                     send
                                 </span>
@@ -208,7 +235,7 @@
                 {
                     <div class="feedbackDiv">
                         <div>
-                            <h1 class="feedbackH1">Feedbacks Got @feedbackType</h1>
+                            <h1 class="feedbackH1">Feedbacks Got @feedbackType Reaction From Public Customers</h1>
                         </div>
                         <table class="feedbackTable">
                             <thead class="theadfeedback">
@@ -217,7 +244,7 @@
                                 <th>Answer</th>
                             </tr>
                             </thead>
-                            
+
                             <tbody>
                             @foreach (var conversation in Conversations)
                             {
@@ -227,14 +254,21 @@
                                 </tr>
                             }
                             </tbody>
-                            
+
                         </table>
                     </div>
                 }
             </div>
         }
 
+        <div class="chat-button-container">
+            <p class="chat-label">Chat </p>
 
+            <button class="chat-button" @onclick="() => StartChatSession()">
+                <i class="fas fa-comments"></i> <!-- This is the chat icon -->
+            </button>
+
+        </div>
         @*
         @if (ResponseId == null)
         {
@@ -311,6 +345,8 @@
 
     private DateTime startDate;
     private DateTime endDate;
+    private string feedbackType;
+    private bool isChatActive = true;
 
     [Parameter] public string ResponseId { get; set; }
 
@@ -322,11 +358,12 @@
 
 
     ElementReference chatContainer;
+    public List<Chat_session> ChatSessions { get; set; }
 
     protected override void OnInitialized()
     {
         startDate = DateTime.Now;
-        endDate = DateTime.Now.AddMinutes(5);
+        endDate = DateTime.Now.AddMinutes(1);
         base.OnInitialized();
     }
 
@@ -440,8 +477,6 @@
         }
     }
 
-    string feedbackType;
-
 
     private void SetFeedbackType(ChangeEventArgs e)
     {
@@ -468,6 +503,84 @@
 
         Conversations = await feedbackService.GetConversationsByFeedbackAndByDateAsync(startDate, endDate, feedbackType);
         StateHasChanged();
+    }
+
+
+    private async Task<List<Chat_session>> GetAllChatSessionByDate()
+    {
+        ChatSessions = await chatSessionService.GetChatSessionsByDate(startDate, endDate);
+
+        return ChatSessions;
+    }
+
+
+    private async Task FetchChatSession(int id)
+    {
+        var chatSession = ChatSessions.FirstOrDefault(cs => cs.Id == id);
+
+        if (chatSession != null)
+        {
+            // Clear the current messages
+            messages.Clear();
+
+            // Add the conversations of the fetched chat session to the messages
+            foreach (var conversation in chatSession.Conversations)
+            {
+                messages.Add(new Message { Text = conversation.Question, IsUser = true });
+                messages.Add(new Message { Text = conversation.Answer, IsUser = false });
+            }
+
+            // Disable the chat
+            isChatActive = false;
+
+            // Force a UI update
+            StateHasChanged();
+        }
+    }
+
+    private async Task StartChatSession()
+    {
+        //  IsLoading = true; //here SweetAlertLoading turns to true
+        ShowSweetAlertLoading(true); // Show loading alert
+        var response = await ChatSessionService.StartChatSessionAsync();
+        Console.WriteLine("response from start chat seesion: " + response);
+        ShowSweetAlertLoading(false); // Hide loading alert
+        NavigationManager.NavigateTo($"/ChatPage/{response}");
+        messages.Clear();
+        OnInitializedAsync();
+        isChatActive = true;
+        // Force a full page refresh
+        //await JSRuntime.InvokeVoidAsync("eval", "location.reload()");
+        //IsLoading = false;  //here SweetAlertLoading turns to false 
+    }
+
+    private void ShowSweetAlertLoading(bool show)
+    {
+        if (show)
+        {
+            void WillOpenHandler()
+            {
+                MySweetAlertService.ShowLoadingAsync();
+            }
+
+            // Convert the method to a delegate with the same signature as SweetAlertCallback
+            SweetAlertCallback willOpenCallback = new SweetAlertCallback(WillOpenHandler);
+
+            MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Color = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                IconColor = "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(49, 98, 153, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+                Title = "Please Wait The Session Will Start!",
+                Html = "Processing..",
+                AllowOutsideClick = false,
+                ShowConfirmButton = false,
+                WillOpen = willOpenCallback
+            });
+        }
+        else
+        {
+            MySweetAlertService.CloseAsync();
+        }
     }
 
 
