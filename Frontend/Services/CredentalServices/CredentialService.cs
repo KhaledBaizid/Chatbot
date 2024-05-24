@@ -12,10 +12,10 @@ public class CredentialService : ICredentialService
     }
     
     
-    public async Task<string?> ChangePassword(int id ,string current, string newPasswordd, string repeatPassword)
+    public async Task<string?> ChangePassword(int id ,string current, string newPassword, string repeatPassword)
     {
         
-        var endpointUrl = $"{httpClient.BaseAddress}Credentials/password?id={id}&password={current}&newPassword={newPasswordd}&reenteredPassword={repeatPassword}";
+        var endpointUrl = $"{httpClient.BaseAddress}Credentials?id={id}&password={current}&newPassword={newPassword}&reenteredPassword={repeatPassword}";
 
         var response = await httpClient.PostAsJsonAsync(endpointUrl, new { });
 
