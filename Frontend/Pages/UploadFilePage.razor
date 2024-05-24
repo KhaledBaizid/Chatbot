@@ -200,6 +200,21 @@
     {
         try
         {
+            
+            var result = await MySweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Are you sure?",
+                Text = "You will not be able to recover this PDF file!",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Yes, delete it!",
+                CancelButtonText = "No, cancel!"
+            });
+
+            if (!result.IsConfirmed)
+            {
+                return;
+            }
             //  IsLoading = true;
             ShowSweetAlertLoading(true);
             var deleteResponse = await _IUploadFileService.DeleteFileToBlobAsync(attachment.FileName);
