@@ -1,9 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Backend.EFCData;
 using Backend.Services;
-using LangChain.Memory;
-using LangChain.Prompts;
-using LangChain.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Pgvector;
@@ -16,45 +13,36 @@ public class ConversationDAO : IConversationInterface
 {
     private readonly DataContext _systemContext;
     private readonly IEmbeddingProvider _embeddingProvider;
-    private readonly ILlmChainProvider _llmChainProvider;
-   List<string> l = new List<string>();
-    public ConversationDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, ILlmChainProvider llmChainProvider)
+    private readonly ILlmChainProvider _promptProvider;
+
+    public ConversationDAO(DataContext systemContext, IEmbeddingProvider embeddingProvider, ILlmChainProvider promptProvider)
     {
         _systemContext = systemContext;
         _embeddingProvider = embeddingProvider;
-        _llmChainProvider = llmChainProvider;
+        _promptProvider = promptProvider;
     }
 
     public  async Task<Chat_session> GetConversationByChatSessionIdAsync(int chatSessionId,string question,int timeOutSeconds)
     {
         try
         { 
-            // get the embedding of the question
             var embeddingQuestion = await _embeddingProvider.GetModel().EmbedQueryAsync(question);
-         
             Vector embeddingVectorQuestion = new Vector(embeddingQuestion);
-           
-            string Context = "";
-           
-            // find the context of the question by calling the GetChunksByVector method to get the chunks that are similar to the question
-            Context =  await GetChunksByVector(embeddingVectorQuestion);
+            //////////////////////////////////////////////////////////////
+            string chunks = "";
+            chunks =  await GetChunksByVector(embeddingVectorQuestion);
             
             string answer = "";
             
-            if (Context.Equals("") )
+            if (chunks.Equals("") )
             {
                 answer = "I am sorry, i can not find the answer to your question.";
               
             }
             else
-            {  var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeOutSeconds));
-               
-              // use llmChain provider to generate the answer
-                var getAnswerTask = _llmChainProvider.GetMode().Llm.GenerateAsync(" Use the following pieces of context to answer the question at the end.\n     If the answer is not in context then just say that you don't know, don't try to make up an answer. this is the context:\n "+Context+".\n . and this the question: \n"+question);
-               
-                Console.WriteLine(getAnswerTask.Result.Usage.Time.TotalSeconds);
-              
-              //  var promptAnswer= await _promptProvider.GetModeLlmChain().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but not find out of context, and this the question: "+question);
+            { 
+                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeOutSeconds));
+                var getAnswerTask = _promptProvider.GetMode().Llm.GenerateAsync(" this is the context:"+chunks+" .I will ask you but not find out of context, and this the question: "+question); 
               
                 var completedTask = await Task.WhenAny(getAnswerTask , timeoutTask);
                 
@@ -84,7 +72,7 @@ public class ConversationDAO : IConversationInterface
             await _systemContext.SaveChangesAsync();
            
         //    }
-            var chatSession = await _systemContext.Chat_sessions.Include(c => c.Conversations.OrderBy(con=>con.Id)).FirstAsync(c => c.Id == chatSessionId);
+            var chatSession =  await _systemContext.Chat_sessions.Include(c => c.Conversations.OrderBy(con=>con.Id)).OrderByDescending(c=>c.Id).FirstAsync(c => c.Id == chatSessionId);
             return chatSession;
             
         }
@@ -95,25 +83,95 @@ public class ConversationDAO : IConversationInterface
         }
         throw new NotImplementedException();
     }
+    
+    public async Task<string> GetChunksByVector(Vector vector)
+    { string chunksText = "";
+        if (_systemContext.Database.IsInMemory())
+        {
+            var chunks =  _systemContext.Chunks
+                
+                .AsEnumerable()
+                .Select(x => new { Entity = x, Distance = CosineDistance(x.Embedding, vector) })
 
-    private async Task<string> GetChunksByVector(Vector vector)
-    { 
-        string chunksText = "";
-       
-            var chunks = await _systemContext.Chunks
-                .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
-                .Where(x => x.Distance < 0.25)
+                .Where(x => x.Distance<0.22)
                 .OrderBy(x => x.Distance)
-                .Take(15)
-                .ToListAsync();
+                .Take(10)
+                .ToList();
+           
+            Console.WriteLine("-------------------------------------------------------------------");
+            Console.WriteLine(chunks.ToArray());
+
             foreach (var chunk in chunks)
-            {  
-                chunksText += chunk.Entity.Text+" ";
+            {  Console.WriteLine("-------------------------------------------------------------------");
+                Console.WriteLine(chunk.Entity.Text);
+                chunksText += chunk.Entity.Text;
             }
+        }
+        else
+        {
+            var chunks = await _systemContext.Chunks
+                  .Select(x=>new{Entity = x, Distance = x.Embedding!.CosineDistance(vector) })
+               
+                .Where(x => x.Distance < 0.22)
+                .OrderBy(x => x.Distance)
+                .Take(10)
+                .ToListAsync();
+           
+            Console.WriteLine("-------------------------------------------------------------------");
+            foreach (var chunk in chunks)
+            {  Console.WriteLine("-------------------------------------------------------------------");
+                Console.WriteLine(chunk.Entity.Text);
+                chunksText += chunk.Entity.Text;
+            }
+        }
+     
+     
         return chunksText;
     }
     
-    
+    public static double CosineDistance(Vector vector1, Vector vector2)
+    {
+        if (vector1 == null || vector2 == null)
+        {
+            throw new ArgumentNullException("Vectors cannot be null");
+        }
+
+        // Calculate dot product
+        double dotProduct = DotProduct(vector1, vector2);
+
+        // Calculate magnitudes
+        double magnitude1 = Magnitude(vector1);
+        double magnitude2 = Magnitude(vector2);
+
+        // Calculate cosine distance
+        return 1- ( dotProduct / (magnitude1 * magnitude2));
+    }
+
+    private static double DotProduct(Vector vector1, Vector vector2)
+    {
+        if (vector1.ToArray().Length!= vector2.ToArray().Length)
+        {
+            throw new ArgumentException("Vectors must have the same length");
+        }
+
+        double dotProduct = 0;
+        for (int i = 0; i < vector1.ToArray().Length; i++)
+        {
+            dotProduct += vector1.ToArray()[i] * vector2.ToArray()[i];
+        }
+        return dotProduct;
+    }
+
+    private static double Magnitude(Vector vector)
+    {
+        double sumOfSquares = 0;
+        foreach (double component in vector.ToArray())
+        {
+            sumOfSquares += component * component;
+        }
+        return Math.Sqrt(sumOfSquares);
+    }
+
     public Task<List<Conversation>> GetConversationsByFeedbackAndByDateAsync(DateTime startDate, DateTime endDate, string feedback)
     {
         try
@@ -134,6 +192,4 @@ public class ConversationDAO : IConversationInterface
         }
         throw new NotImplementedException();
     }
-    
-   
 }
