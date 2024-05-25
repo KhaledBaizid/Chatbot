@@ -13,7 +13,7 @@
 @inject IFeedbackService feedbackService
 @inject SweetAlertService MySweetAlertService
 @inject NavigationManager NavigationManager
-@inject IChatSessionService ChatSessionService;
+ 
 @using Microsoft.AspNetCore.Components.Authorization
 
 <style> 
@@ -269,73 +269,6 @@
             </button>
 
         </div>
-        @*
-        @if (ResponseId == null)
-        {
-            <div class="spinner"></div>
-        }
-
-        else
-        {
-            <div class="chatPage row  ">
-
-                <div class="chatlist col-xxl-2 col-xl-2 col-lg-2 col-md-5 col-sm-12">
-
-
-                </div>
-                <div class="chat-container col-xxl-10 col-xl-10 col-lg-10 col-md-7 col-sm-12">
-                    <div class="insideContainer">
-
-                        <div class="chat-messages" @ref="chatContainer">
-                            @foreach (var message in messages)
-                            {
-                                if (message.IsUser)
-                                {
-                                    <div class="contentUserMsg">
-                                        <i class="fas fa-user icon userIcon"></i>
-                                        <p class="message user-message">@message.Text</p>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="contentChatMsg">
-                                        <i class="fas fa-robot icon"></i>
-                                        <p class="message chatbot-message">@message.Text</p>
-                                    </div>
-                                }
-                            }
-
-
-                        </div>
-
-                        @if (IdOfFirstConversation.HasValue)
-                        {
-                            <div class="feedback">
-                                <button class="btn btn-primary likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Positive)">
-                                    <i class="fas fa-thumbs-up"></i> Like
-                                </button>
-                                <button class="btn btn-danger likeDislikeButtons" @onclick="() => LikeDislikeButton(IdOfFirstConversation, FeedbackEnum.Negative)">
-                                    <i class="fas fa-thumbs-down"></i> Dislike
-                                </button>
-                            </div>
-                        }
-
-
-                        <div class="inputComponent">
-                            <input @bind="userInput" @onkeyup="HandleKeyUp"/>
-                            <button class="colorless-button" @onclick="HandleButtonClick">
-                                <span class="material-icons">
-                                    send
-                                </span>
-                            </button>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-        }
-        *@
 
     </Authorized>
 </AuthorizeView>
@@ -343,9 +276,7 @@
 
 @code {
 
-    private DateTime startDate;
-    private DateTime endDate;
-    private string feedbackType;
+
     private bool isChatActive = true;
 
     [Parameter] public string ResponseId { get; set; }
@@ -356,9 +287,13 @@
 
     List<Message> messages = new List<Message>();
 
-
+    private List<Conversation> Conversations { get; set; }
     ElementReference chatContainer;
-    public List<Chat_session> ChatSessions { get; set; }
+    
+    private List<Chat_session> ChatSessions { get; set; }
+    private DateTime startDate;
+    private DateTime endDate;
+    private string feedbackType;
 
     protected override void OnInitialized()
     {
@@ -483,7 +418,7 @@
         feedbackType = e.Value.ToString();
     }
 
-    public List<Conversation> Conversations { get; set; }
+ 
 
     private async Task FilterByFeedback()
     {
@@ -542,7 +477,8 @@
     {
         //  IsLoading = true; //here SweetAlertLoading turns to true
         ShowSweetAlertLoading(true); // Show loading alert
-        var response = await ChatSessionService.StartChatSessionAsync();
+        
+        var response = await chatSessionService.StartChatSessionAsync();
         Console.WriteLine("response from start chat seesion: " + response);
         ShowSweetAlertLoading(false); // Hide loading alert
         NavigationManager.NavigateTo($"/ChatPage/{response}");

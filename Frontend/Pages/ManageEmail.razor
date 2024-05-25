@@ -62,19 +62,6 @@
             </div>
 
         </section>
-      @*
-        @if (context.User != null && context.User.Identity != null)
-        {
-            var userEmail = context.User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
-            <h3>Hello, @context.User.Identity.Name</h3>
-            <h4>Email: @userEmail</h4>
-        }
-        else
-        {
-            <p>User not authenticated</p>
-        }
-     *@
-         
     </Authorized>
 </AuthorizeView>
 
@@ -103,7 +90,7 @@
             if (CurrentPassword != null || NewMail != null || RepeatNewMail != null)
             {
 
-                string response = await iCredentialService.ChangePassword(userIdFromCache ,CurrentPassword, NewMail, RepeatNewMail);
+                string response = await iCredentialService.ChangeMail(userIdFromCache ,CurrentPassword, NewMail, RepeatNewMail);
 
                 errorMessage = response;
                 NavigationManager.NavigateTo("/");
