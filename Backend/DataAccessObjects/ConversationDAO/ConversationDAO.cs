@@ -98,12 +98,13 @@ public class ConversationDAO : IConversationInterface
                 .Take(10)
                 .ToList();
            
-            Console.WriteLine("-------------------------------------------------------------------");
-            Console.WriteLine(chunks.ToArray());
+           // Console.WriteLine("-------------------------------------------------------------------");
+          //  Console.WriteLine(chunks.ToArray());
 
             foreach (var chunk in chunks)
-            {  Console.WriteLine("-------------------------------------------------------------------");
-                Console.WriteLine(chunk.Entity.Text);
+            { 
+                // Console.WriteLine("-------------------------------------------------------------------");
+              //  Console.WriteLine(chunk.Entity.Text);
                 chunksText += chunk.Entity.Text;
             }
         }
@@ -117,10 +118,11 @@ public class ConversationDAO : IConversationInterface
                 .Take(10)
                 .ToListAsync();
            
-            Console.WriteLine("-------------------------------------------------------------------");
+          //  Console.WriteLine("-------------------------------------------------------------------");
             foreach (var chunk in chunks)
-            {  Console.WriteLine("-------------------------------------------------------------------");
-                Console.WriteLine(chunk.Entity.Text);
+            { 
+                //Console.WriteLine("-------------------------------------------------------------------");
+               // Console.WriteLine(chunk.Entity.Text);
                 chunksText += chunk.Entity.Text;
             }
         }
