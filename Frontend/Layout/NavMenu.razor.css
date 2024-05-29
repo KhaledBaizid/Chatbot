@@ -80,6 +80,7 @@ nav.shift {
     height: 40px;
     min-width: 110px;
     margin-bottom: 5px;
+  
 
 }
 
@@ -158,4 +159,5 @@ nav.shift ul li a:hover:after {
     visibility: visible;
     height: 100%;
 }
+
  
