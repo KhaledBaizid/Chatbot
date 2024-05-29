@@ -2,7 +2,7 @@
 @using UploadFile.Models
 @using Frontend.Services
 @using Frontend.Services.UploadFileServices
-
+@inject IJSRuntime JSRuntime
 @inject IUploadFileService _IUploadFileService
 @inject SweetAlertService MySweetAlertService
 @inject IAuthManager AuthManager
@@ -40,7 +40,7 @@
             <div class="row divWidth">
                 <div class="col-sm-4">
                     <label>
-                        <InputFile class="form-control" disabled="@fileLoading" OnChange="@OnInputFileChange" single/>
+                        <InputFile class="form-control"  disabled="@fileLoading" OnChange="@OnInputFileChange" single/>
                     </label>
                 </div>
                 <div class="col-sm-2">
@@ -108,7 +108,9 @@
     private IEnumerable<FileUploadViewModel> files;
 
     private int userid;
-
+  
+    
+    
     protected override async Task OnInitializedAsync()
     {
         userid = await AuthManager.GetUserIdFromCache();
@@ -117,17 +119,41 @@
     }
 
 
-    private void OnInputFileChange(InputFileChangeEventArgs e)
+    private async void OnInputFileChange(InputFileChangeEventArgs e)
     {
         selectedFiles = e.GetMultipleFiles();
-        Message = $"{selectedFiles.Count} file(s) selected";
+        foreach (var file in selectedFiles)
+        {
+            if (file.Name.ToLower().EndsWith(".pdf"))
+            {
+                Message = $"{selectedFiles.Count} file(s) selected";
+            }
+            else
+            {
+                WarningFileIsNotPdf();
+                return;
+            }
+        }
+     
         this.StateHasChanged();
     }
 
     private async void OnUploadSubmit()
     {
+        if (selectedFiles == null || !selectedFiles.Any())
+        {
+            await WarningFileIsNotPdf();
+            return;
+        }
         foreach (var file in selectedFiles)
         {
+            
+            if (!file.Name.ToLower().EndsWith(".pdf")|| file.Name.Equals(""))
+            {
+               await WarningFileIsNotPdf();
+               return;
+            }
+            
             try
             {
                 ShowSweetAlertLoading(true);
@@ -271,7 +297,15 @@
         }
     }
 
-
+    private async Task WarningFileIsNotPdf()
+    {
+        MySweetAlertService.FireAsync(new SweetAlertOptions
+        {
+            Title = "Invalid File Type",
+            Text = "You must upload a PDF file.",
+            Icon = SweetAlertIcon.Warning
+        });
+    }
     private void ShowSweetAlertLoading(bool show)
     {
         if (show)
