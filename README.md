@@ -16,7 +16,7 @@ A multi\-project PDF chatbot solution built with C\# \(\.NET\). It includes a ba
 - ASP\.NET Core Web API \(`Backend/`\)
 - Blazor \(`Frontend/`\)
 - Entity Framework Core \(`Backend/EFCData/`, `Backend/Migrations/`\)
-- xUnit/NUnit/MSTest \(\*depends on `TestProject/` config\)
+- xUnit/NUnit/MSTest \( `TestProject/` )
 
 ## Key Features (High Level)
 
