@@ -1,6 +1,6 @@
 # Chatbot
 
-A multi\-project chatbot solution built with C\# \(\.NET\). It includes a backend Web API, a Blazor frontend, a shared library for common models, and an automated test project.
+A multi\-project PDF chatbot solution built with C\# \(\.NET\). It includes a backend Web API, a Blazor frontend, a shared library for common models, and an automated test project.
 
 ## Solution Structure
 
